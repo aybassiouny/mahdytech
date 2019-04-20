@@ -1,11 +1,11 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
-    author: `Kyle Mathews`,
+    title: `MahdyTech`,
+    author: `Ahmed Mahdy`,
     description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
+    siteUrl: `https://mahdytech.com/`,
     social: {
-      twitter: `kylemathews`,
+      twitter: `aybassiouny`,
     },
   },
   plugins: [
@@ -32,6 +32,7 @@ module.exports = {
             resolve: `gatsby-remark-images`,
             options: {
               maxWidth: 590,
+              linkImagesToOriginal: true,
             },
           },
           {
@@ -70,7 +71,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `content/assets/gatsby-icon.png`,
+        icon: `content/assets/mahdytech-icon.png`,
       },
     },
     `gatsby-plugin-offline`,

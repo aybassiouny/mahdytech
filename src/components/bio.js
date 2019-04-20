@@ -38,11 +38,10 @@ function Bio() {
               }}
             />
             <p>
-              Written by <strong>{author}</strong> who lives and works in San
-              Francisco building useful things.
+              This is <strong>{author}</strong>, and these are some of my thoughts on Cloud Computing.
               {` `}
               <a href={`https://twitter.com/${social.twitter}`}>
-                You should follow him on Twitter
+                Follow me on Twitter
               </a>
             </p>
           </div>

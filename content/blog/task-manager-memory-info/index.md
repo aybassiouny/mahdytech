@@ -41,22 +41,22 @@ Private Bytes [Committed Memory] =  Private Bytes + Page File
 
 By default, Task Manager shows Working Set under any process:
 
-![Default Task Manager](TaskManagerWorkingSet.png "Task Manager shows Working Set by default")
+![Default Task Manager](./TaskManagerWorkingSet.PNG "Task Manager shows Working Set by default")
 
 And that's the number I used to look at all the time. Little did I know, Task Manager *actually* has commit info, but it's under the column `Commit Size`. I so far could not find Virtual Memory info in there.
 
-![Task Manager after adding Commit Size](TaskManagerCommitSize.png "It is possible to add Commit Size")
+![Task Manager after adding Commit Size](./TaskManagerCommitSize.PNG "It is possible to add Commit Size")
 *Task Manager allows adding Commit Size by right-clicking columns and adding it*
 
 ## Effective Memory Metrics
 
 Thankfully, there are many other resources to examine Perf in Windows. Every windows machine has `PerfMon` that can be used to expose very detailed info about each process and the system in general:
 
-![PerfMon](PerfMon.png "PerfMon allows examining very detailed measurements about system")
+![PerfMon](./PerfMon.PNG "PerfMon allows examining very detailed measurements about system")
 
 Interestingly, PerfMon can actually possible to examine & compare metrics across two or more machines in the network. It's very powerful, but Task Manager is obviously more user friendly. In order to get an in-the-middle solution, I recommend [Process Explorer](https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer):
 
-![Process Explorer](ProcessExplorer.png "Process Explorer showing all Private Bytes, Working Set, and Virtual Size")![Process Explorer System Info](ProcessExplorer.png "Process Explorer showing overall system info")
+![Process Explorer](./ProcessExplorer.PNG "Process Explorer showing all Private Bytes, Working Set, and Virtual Size")![Process Explorer System Info](./ProcessExplorer.PNG "Process Explorer showing overall system info")
 
 Boom! Visual Studio, why are yous till 32-bit (notice its Virtual Size)? My computer's peak memory usage has been at 89% of its limit, not too shabby. This comes in useful [later](#Debugging-with-Memory-Info). 
 
