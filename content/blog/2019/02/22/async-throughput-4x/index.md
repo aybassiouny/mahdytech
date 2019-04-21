@@ -21,7 +21,7 @@ Contents:
   - [Context Needs to be Carried Around](#Context)
 - [Conclusion](#Conclusion)
 
-## Lay of the Land {#LayOfLand}
+## Lay of the Land
 
 The application in hand followed a pretty straightforward pipeline for a server:
 
@@ -58,7 +58,7 @@ Before moving on to how adding IO to request processing can make our lives harde
 
 ---
 
-### Setting Number of Threads in Processing Thread Pool to a Constant {#ConstantThreads}
+### Setting Number of Threads in Processing Thread Pool to a Constant
 
 This is an important detail in the design. We chose to set the number of processing threads in the thread pool to a specific number. This decision is backed by two reasons:
 
@@ -68,7 +68,7 @@ This is an important detail in the design. We chose to set the number of process
 
 Allocations, however, are not cheap. While it can be *okay* to have sub-par performance during warmup, arbitrary large allocations during serving are not acceptable and will lead to unwanted latency hikes. If we don't use a constant number of threads, QPS increases can trigger the pool manager to create new threads, causing latency hikes. In a perfect world, increased QPS should lead to increased CPU usage, not latency hikes.
 
-#### 2. Reasoning about App Logic {#AppLogic}
+#### 2. Reasoning about App Logic
 
 I find it easier to reason about an app's logic when I know for sure how many threads are doing request processing. Allowing the thread pool to create & delete new threads upon need means we are never really sure how many threads are there. Scheduling, as we are about to elaborate, becomes harder. This might not be as concrete as the first reason, but it has helped a lot in many debugging sessions.
 
@@ -90,7 +90,7 @@ At this point, the app was capable of handling 40k QPS per machine. That's not t
 
 ---
 
-## First Try: Blocking Async {#FirstTry}
+## First Try: Blocking Async
 
 Now that I needed to add the network IO call on the serving hot path, I started thinking, how to inject this into the workflow [above](#LayOfLand)? We need some way of stopping processing, do the IO, then continue after IO is done. At a first glance, it looks like a thread synchronization problem. Let's consult what C++ has to offer.
 
@@ -110,7 +110,7 @@ Response ProcessRequest(Request request)
 
 It was easy to add, and we didn't have to change a lot of code. Great! it also totally does **not** work, perf-wise. With those added 3 lines of code, we now go from 40k QPS all the way down to 8k QPS!
 
-### Wait, What Just Happened {#WhatHappened}
+### Wait, What Just Happened
 
 Let's take a second and reason about this. We have added an extra IO operation, which is a remote call to another machine. Hence, the majority of the added work is not done locally, but on another machine and (more importantly) in transport. Why did we lose so much throughput then? To visualize the issue, let's have a look at how our threads work now:
 
@@ -126,7 +126,7 @@ And this limbo is exactly why throughput had plummeted. The decisions to limit t
 
 > Side note on the performance of waits: I used to be under the impression that waits, such as `std::future::get()` are part of the cause for perf degradation, due to OS context switching to check if the condition has been satisfied or not. Upon doing a bit of homework, turns out OS actually does a good job with locks and IO waits. Waiting threads are kept waiting, until another thread signals that occurrence of the waited-for event, at which case the scheduler [boosts](https://docs.microsoft.com/en-us/windows/desktop/procthread/priority-boosts) the waiting threads' priority to make sure they get picked up soon after.
 
-## What it Takes to be *Actually* Async {#WhatItTakes}
+## What it Takes to be *Actually* Async
 
 Doing IO within the hot path is an inevitable evil. CPUs are just faster. Which means, while IO is happening, CPU would just be sitting there, doing nothing. Unless we give it some work!
 
@@ -138,7 +138,7 @@ To put it in words, we'd like to replace wait time by actually doing some work. 
 
 Unfortunately, achieving this is not straightforward. Two major changes need to be applied:
 
-### 1. Everything is a Callback {#ErythingIsACallback}
+### 1. Everything is a Callback
 
 We cannot have functions with the signature `Response ProcessRequest(Request request)` anymore. These need to be overhauled, and replaced with:
 
@@ -151,7 +151,7 @@ Note how the return type `Response` got transformed into an input parameter in t
 
 This is the biggest hurdle I had faced, as it requires changing signatures everywhere. If during design, you see doing IO on the hot path in the future of an app, I would highly recommend starting off with signatures supporting callbacks. Doing that later on is painful.
 
-### 2. Context Needs to be Carried Around {#Context}
+### 2. Context Needs to be Carried Around
 
 With callbacks - lifetimes become all the more difficult. Not only do objects have to live in the current parentheses context - but we have to be careful to capture them in the callback, in case they are used. For example, `Request` object from before probably needs to be kept alive until the very last callback is called.
 
@@ -181,7 +181,7 @@ After applying similar changes, the app was back on track. Latency stayed the sa
 
 ---
 
-## Conclusion {#Conclusion}
+## Conclusion
 
 The major defining factor here has been our static number of processing threads in the thread pool. Adding more threads might have solved the problem, but I would argue against that. It would be hard (and hardware dependent) to find the best number. We have already discussed setting that [dynamically](#TLS).
 

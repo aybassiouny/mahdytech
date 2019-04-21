@@ -25,7 +25,8 @@ It was not very fruitful. Before applying the PageHeap, I used to get random cra
 I had an idea. Debug builds are notoriously slow for a reason - they do too many checks, and that's exactly what I needed now. I rebuilt in debug & deployed, and voila! The app was throwing exactly where the problem was happening. The problem had to do with misuse of a custom allocator that was freeing its memory without destructing underlying objects. Later on, the kernel would [reclaim](https://mahdytech.com/2019/01/05/task-manager-memory-info/) that space, at a  random moment, and accessing that structure would trigger a crash. 
 
 Standard library and most *well-written* library enforce debug-mode checks for insecure code. Usually, Unit Tests catch these errors, but we're not always that lucky. For example, Visual C++ does boundary checks in this constructor of `std::vector`: 
-```cpp
+
+```language-cpp
 template<class _Iter, class = enable_if_t<_Is_iterator_v<_Iter>>>
 vector(_Iter _First, _Iter _Last, const _Alloc& _Al = _Alloc())
 : _Mybase(_Al)

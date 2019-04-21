@@ -2,6 +2,7 @@
 title: Why I don't use Task Manager for Memory Metrics
 date: "2019-01-05T22:40:32.169Z"
 description: Task Manager can be lacking as a memory tracker. Let's cover alternatives to replace it. First, let’s discuss how memory allocations work in Windows.
+path: /2019/01/05/umdh-slow-leaks/
 ---
 
 As a windows user for many many years, Task Manager is a friend. Through the years, I have used it to kill thousands of misbehaving apps, and getting info about which ones are exhausting my resources. Until I started working with machines that has 100s of GBs of memory and apps to match. In this post I would like to discuss how it can be lacking as a memory tracker, and go over alternatives that could replace it. First, let's discuss how memory allocations work in Windows.
