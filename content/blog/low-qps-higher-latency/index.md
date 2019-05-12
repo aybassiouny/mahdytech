@@ -27,6 +27,8 @@ As in [most posts](https://mahdytech.com/2019/01/13/curious-case-999-latency-hik
 
 Since I am blogging about this - you probably figured it out already: their numbers were correct. I re-ran my dummy client again and again, all with the same result: Lower QPS, not only leads to higher latencies, but just plain higher number of requests with latency over 10ms. In other words, if at 40k QPS 50 queries every second were over 50ms, at 1k QPS there were 100 queries every second above 50ms. Paradox!
 
+> Note: if you're not seeing the graphs refresh this page. I will try and remove this dependency in the next iteration.
+
 <div class="infogram-embed" data-id="5905fbdf-b2fc-4685-8503-f44bfd823319" data-type="interactive" data-title="Line Chart"></div>
 
 ## Narrowing it Down
