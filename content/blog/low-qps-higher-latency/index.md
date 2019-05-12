@@ -1,7 +1,7 @@
 ---
 title: "More is Sometimes Less: When Lowering Load can Trigger Higher Latencies"
 date: "2019-05-12T12:00:32.169Z"
-description: 
+description: Latency was high at low QPS due to an OS optimization. Profile did not catch the delays because they were on the Kernel side of things.
 ---
 
 - [Backdrop](#backdrop)
