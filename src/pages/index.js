@@ -6,6 +6,8 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm } from "../utils/typography"
 
+import Helmet from 'react-helmet';
+
 class BlogIndex extends React.Component {
   render() {
     const { data } = this.props
@@ -41,6 +43,14 @@ class BlogIndex extends React.Component {
             </div>
           )
         })}
+        <Helmet>
+          <html lang="en" />
+          <title>MahdyTech</title>
+          <meta
+            name="google-site-verification"
+            content="nGLIM6ZHylyw7G0k0R5ML9gU07rY11bl2O9RPeT5rOk"
+          />
+        </Helmet>;
       </Layout>
     )
   }
