@@ -131,6 +131,6 @@ As for the [localhost experiment](#what-if), it probably did not touch actual ne
 The next time you see higher latency coinciding with lower QPS, Nagle's algorithm should be on your checklist!
 
 ___
-Follow article discussions on [reddit]() or [hackernews]()!
+Help [improve this text](https://github.com/aybassiouny/mahdytech) or discuss it on [reddit](), [hackernews]().
 
 <script>!function(e,t,s,i){var n="InfogramEmbeds",o=e.getElementsByTagName("script")[0],d=/^http:/.test(e.location)?"http:":"https:";if(/^\/{2}/.test(i)&&(i=d+i),window[n]&&window[n].initialized)window[n].process&&window[n].process();else if(!e.getElementById(s)){var r=e.createElement("script");r.async=1,r.id=s,r.src=i,o.parentNode.insertBefore(r,o)}}(document,0,"infogram-async","https://e.infogram.com/js/dist/embed-loader-min.js");</script>
