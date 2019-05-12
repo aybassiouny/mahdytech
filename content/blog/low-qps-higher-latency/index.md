@@ -1,6 +1,6 @@
 ---
 title: "More is Sometimes Less: When Lowering Load can Trigger Higher Latencies"
-date: "2019-05-04T12:00:32.169Z"
+date: "2019-05-12T12:00:32.169Z"
 description: 
 ---
 
@@ -22,7 +22,7 @@ As in [most posts](https://mahdytech.com/2019/01/13/curious-case-999-latency-hik
 
  One day, I woke up to a disgruntled email due to high latencies caused by Alvin, that we were planning to launch soon. In particular, the client was facing 99th latency around 50ms, way above our latency budget. That was surprising, as I have thoroughly tested this service, especially the latency - the point of complaint.
 
- I got ready to reply dismissing their results. Before declaring Alvin *testable*, I had run many experiments with 40k QPS, all showing less than 10ms latency. Another look at the email showed something new: I didn't *exactly* test the conditions they mentioned, their [QPS](https://en.wikipedia.org/wiki/Queries_per_second) was much lower than mine. While I was testing with 40k QPS, they were testing with only 1k. I ran my experiment once again, with lower QPS this time, just to humour them.
+ Before declaring Alvin *testable*, I had run many experiments with 40k QPS, all showing less than 10ms latency. I got ready to reply dismissing their results. However, another look at the email showed something new: I didn't *exactly* test the conditions they mentioned, their [QPS](https://en.wikipedia.org/wiki/Queries_per_second) was much lower than mine. While I was testing with 40k QPS, they were testing with only 1k. I ran my experiment once again, with lower QPS this time, just to humour them.
 
 Since I am blogging about this - you probably figured it out already: their numbers were correct. I re-ran my dummy client again and again, all with the same result: Lower QPS, not only leads to higher latencies, but just plain higher number of requests with latency over 10ms. In other words, if at 40k QPS 50 queries every second were over 50ms, at 1k QPS there were 100 queries every second above 50ms. Paradox!
 
@@ -46,14 +46,14 @@ Let's try to strike through some names.
 
 ### Data Store is Innocent
 
-First thing I did was converting Alvin into a ping-ping sever: if latency improves, then my implementation for Alvin or Data Store has a bug - nothing unheard of. This yielded the graph for the first experiment:
+First thing I did was converting Alvin into a ping-ping server, a server that does no request processing and once it gets a request, returns an empty response. If latency improves, then my implementation for Alvin or Data Store has a bug - nothing unheard of. This yielded the graph for the first experiment:
 
 <div class="infogram-embed" data-id="75e7d91d-4529-4983-bd33-5b72395fe642" data-type="interactive" data-title="Copy: Line Chart"></div>
 
-As the graph shows, there is no improvement, meaning that Data Store is not contributing to the latency hike, our suspect list is shortened to half:
+As the graph shows, there is no improvement when using a ping-pong server, meaning that Data Store is not contributing to the latency hike, our suspect list is shortened to half:
 
 1. Network call from `Client` to `Alvin`
-2. Netowkr call from `Alvin` to `Client`
+2. Network call from `Alvin` to `Client`
 
 Great! Our list is getting quickly smaller. I thought I was almost there.
 
@@ -61,11 +61,11 @@ Great! Our list is getting quickly smaller. I thought I was almost there.
 
 Now is a good time to introduce a new player to the scene: [gRPC](https://github.com/grpc/grpc). `gRPC` is an open-source library by Google for intra-process [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) communication. While `gRPC` is highly optimized and heavily adopted, this was my first time using it on scale, and I was expecting that my usage was not optimal - to put it mildly.
 
-Having `gRPC` on board introduced a new question: is it my implementation, or is `gRPC` causing the latency problem? A new suspect is added to the list: 
+Having `gRPC` on board introduced a new question: is it my implementation, or is `gRPC` causing the latency problem? A new suspect is added to the list:
 
 1. Client calls into `gRPC` library
 2. `gRPC` library on the Client performs a network call into  `gRPC` library on the Server
-3. `gRPC` librayr calls into `Alvin` request processing callback (A no-op in the case of Ping-Pong server)
+3. `gRPC` library calls into `Alvin` request processing callback (A no-op in the case of ping-pong server)
 
 To have an idea what the code looked like at this point, my Client/Alvin implementation did not look much different from client/server [async examples](https://github.com/grpc/grpc/tree/v1.19.0/examples/cpp/helloworld).
 
@@ -75,7 +75,7 @@ To have an idea what the code looked like at this point, my Client/Alvin impleme
 
 After striking out `Data Store` I had thought I was almost done. I figured: "Easy! I will take a profile and find out which part is causing the delay". I am a [big fan of precise profiling](https://mahdytech.com/2019/01/13/curious-case-999-latency-hike/), because CPUs are blazing fast, and most often they are not the bottleneck. The CPU having to stop processing to do something else is what brings about most delays. Precise CPU profiling is made just for that: it has an accurate record of all [context switches](https://www.tutorialspoint.com/what-is-context-switching-in-operating-system), and in so an idea of where delays are.
 
-I took four profiles: one under high QPS (low latency), and one with PingPong low QPS server (high latency), on both the client and server sides. And just for the heck of it, I also took a sampled CPU profile. When comparing profiles, I usually look for an abnormal callstack. For example, the bad side with high latency showing a lot more context switches (10x or more) than the good side with low latency. But what I found was an almost matching context switching between good and bad runs. To my dismay, however, nothing of substance was there.
+I took four profiles: one under high QPS (low latency), and one with ping-pong low QPS server (high latency), on both the client and server sides. And just for the heck of it, I also took a sampled CPU profile. When comparing profiles, I usually look for an abnormal callstack. For example, the bad side with high latency showing a lot more context switches (10x or more) than the good side with low latency. But what I found was an almost matching context switching between good and bad runs. To my dismay, however, nothing of substance was there.
 
 ## More Debugging
 
@@ -83,11 +83,11 @@ I was getting desperate. My toolbox was empty, and my next plan was to basically
 
 ### What if
 
-From the start, the 50ms latency number has been bugging me. 50 ms is *a lot* of time. I decided that my goal is to keep cutting pieces from my code until I can figure out which part is exactly causing this error. Next came the experiment that worked.
+From the start, the 50ms latency number has been bugging me. 50ms is *a lot* of time. I decided that my goal is to keep cutting pieces from my code until I can figure out which part is exactly causing this error. Next came the experiment that worked.
 
 It was pretty simple, and hindsight is 20/20 as usual. I placed my client in the same machine as Alvin, and sent the request to `localhost`. And the latency increase was gone!  
 
-<div class="infogram-embed" data-id="23d128c0-96e8-4db6-b65b-c069f1e1348e" data-type="interactive" data-title="Copy: Ping Pong Alvin"></div>
+<div class="infogram-embed" data-id="23d128c0-96e8-4db6-b65b-c069f1e1348e" data-type="interactive" data-title="ping-pong Alvin"></div>
 
 Something was wrong with the network.
 
@@ -95,11 +95,11 @@ Something was wrong with the network.
 
 I have a confession: my networking knowledge is abysmal, relatively to how much I deal with networks on a daily basis. Usually I'd say that's to show how good abstraction layers work. However, network was the suspect #1, and I needed to learn how to debug that.
 
-Fortunately, internet is kind to those wanting to learn. A combination of ping and tracecert seemd like a good enough start for debugging network transport issues.
+Fortunately, internet is kind to those wanting to learn. A combination of ping and tracert seemed like a good enough start for debugging network transport issues.
 
-First, I ran [PsPing](https://docs.microsoft.com/en-us/sysinternals/downloads/psping) and targeted the TCP port Alvin was listening on. I used default parameters - nothing fancy. Despite running over a 1000 pings, I didn't see any of which exceed 10ms, except for the first one for warmup. This contradicts the observed 50ms 99% latency increase, we should have seen about a bad request for each 100 requests sent. 
+First, I ran [PsPing](https://docs.microsoft.com/en-us/sysinternals/downloads/psping) and targeted the TCP port Alvin was listening on. I used default parameters - nothing fancy. Despite running over a 1000 pings, I didn't see any of which exceed 10ms, except for the first one for warmup. This contradicts the observed 50ms 99% latency increase, we should have seen about one 50ms request for each 100 requests sent.
 
-Then, I tried [tracecert](https://support.microsoft.com/en-ca/help/314868/how-to-use-tracert-to-troubleshoot-tcp-ip-problems-in-windows), maybe there was an issue with one of the hops requests were hitting on the way between Alvin and the client. However,  tracecert came back empty handed.
+Then, I tried [tracert](https://support.microsoft.com/en-ca/help/314868/how-to-use-tracert-to-troubleshoot-tcp-ip-problems-in-windows), maybe there was an issue with one of the hops requests were hitting on the way between Alvin and the client. However,  tracert came back empty-handed.
 
 So, it was not my code, gRPC implementation or the network causing the delays. I was starting to get worried I am never going to figure this out.
 
@@ -109,26 +109,27 @@ So, it was not my code, gRPC implementation or the network causing the delays. I
 
 <div class="infogram-embed" data-id="9adef12a-ba95-40e9-b04e-d20dd2f94f96" data-type="interactive" data-title="Copy: Localhost"></div>
 
-Lo and behold: Linux ping-pong server didn't have the latency issues of its Windows peer. `gRPC`'s Windows implementation had a problem.
+Lo and behold: Linux ping-pong server didn't have the latency issues of its Windows peer, despite using my source being the same. `gRPC`'s Windows implementation had a problem.
 
 ### Nagle's algorithm
 
-I had a hunch `gRPC` was missing a flag, and it was correct. I searched an internal RPC library that I knew to behave well for all the [Winsock](https://docs.microsoft.com/en-us/windows/desktop/winsock/windows-sockets-start-page-2) flags it set. I then went ahead and added all of them to gRPC, and deployed Alvin on Windows, and that fixed Windows ping-pong server!  
+All along, I had thought I was missing a `gRPC` flag, now I realized it might actually be `gRPC` that was missing a Windows flag. I searched an internal RPC library that I knew to behave well for all the [Winsock](https://docs.microsoft.com/en-us/windows/desktop/winsock/windows-sockets-start-page-2) flags it set. I then went ahead and added all of them to gRPC, and deployed Alvin on Windows, and that fixed Windows ping-pong server!  
 
-*Almost* there: I removed the flags I added  one by one, until regression returned, until I could pin the one flag that made the difference. It was the infamous [TCP_NODELAY](https://docs.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-setsockopt), the switch for Nagle's algorithm.
+<div class="infogram-embed" data-id="87deea72-c1d5-4541-ab76-1c5f667bff86" data-type="interactive" data-title="AllTheFlags"></div>
 
-[Nagle's algorithm](https://en.wikipedia.org/wiki/Nagle%27s_algorithm) tries to decrease number of packets sent over the network, by delaying message transmission until outstanding size exceeds certain number of bytes. While this can be nice for the average user, this is devastating for servers, as it means OS will delay some messages, causing the latency hikes observed under low QPS. `gRPC` had this flag on for its Linux implementation for TCP sockets, but not for Windows, I have fixed that with [1dce1009](https://github.com/grpc/grpc/commit/1dce1009e67ea4b5934a61b1bcf8a217bd12cc76).
+*Almost* there: I removed the flags I added  one by one until regression returned, so that I could pin the one flag that made the difference. It was the infamous [TCP_NODELAY](https://docs.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-setsockopt), the switch for Nagle's algorithm.
+
+[Nagle's algorithm](https://en.wikipedia.org/wiki/Nagle%27s_algorithm) tries to decrease number of packets sent over the network, by delaying message transmission until outstanding size exceeds certain number of bytes. While this can be nice for the average user, this is devastating for real-time servers, as it means OS will delay some messages, causing the latency hikes observed under low QPS. `gRPC` had this flag on for its Linux implementation for TCP sockets, but not for Windows, I have fixed that with [1dce1009](https://github.com/grpc/grpc/commit/1dce1009e67ea4b5934a61b1bcf8a217bd12cc76).
 
 ## Conclusion
 
-Latency was high at low QPS due to an OS optimization. In hindsight, profile did not catch the delays because they were on the Kernel side of things, not in [User Mode](https://blog.codinghorror.com/understanding-user-and-kernel-mode/). I do not know if Nagle's algorithm could be observed through ETW captures, but that would be definitely interesting.
+Latency was high at low QPS due to an OS optimization. In hindsight, profile did not catch the delays because they were on the Kernel side of things, not in [User Mode](https://blog.codinghorror.com/understanding-user-and-kernel-mode/). I do not know if Nagle's algorithm could be observed through ETW captures, but that would be interesting.
 
 As for the [localhost experiment](#what-if), it probably did not touch actual network code, and Nagle's algorithm was not triggered, hence latency issues went away when client called Alvin through localhost.
 
-The next time you see higher latency coinciding with lower QPS, Nagle's algorithm should be on your checklist.
+The next time you see higher latency coinciding with lower QPS, Nagle's algorithm should be on your checklist!
 
--------------
+___
 Follow article discussions on [reddit]() or [hackernews]()!
-
 
 <script>!function(e,t,s,i){var n="InfogramEmbeds",o=e.getElementsByTagName("script")[0],d=/^http:/.test(e.location)?"http:":"https:";if(/^\/{2}/.test(i)&&(i=d+i),window[n]&&window[n].initialized)window[n].process&&window[n].process();else if(!e.getElementById(s)){var r=e.createElement("script");r.async=1,r.id=s,r.src=i,o.parentNode.insertBefore(r,o)}}(document,0,"infogram-async","https://e.infogram.com/js/dist/embed-loader-min.js");</script>
