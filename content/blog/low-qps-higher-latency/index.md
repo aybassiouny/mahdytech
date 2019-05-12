@@ -1,8 +1,8 @@
 ---
-title: "More is Sometimes Less: When Lower Load can Trigger Higher Latencies"
+title: "More is Sometimes Less: When Lower Load Triggers Higher Latencies"
 date: "2019-05-12T12:00:32.169Z"
 description: Latency was high at low QPS due to an OS optimization. Profile did not catch the delays because they were on the Kernel side of things.
-seotitle: When Lower Load can Trigger Higher Latencies
+seotitle: When Lower Load Triggers Higher Latencies
 ---
 
 - [Backdrop](#backdrop)
@@ -131,6 +131,6 @@ As for the [localhost experiment](#what-if), it probably did not touch actual ne
 The next time you see higher latency coinciding with lower QPS, Nagle's algorithm should be on your checklist!
 
 ___
-Help [improve this text](https://github.com/aybassiouny/mahdytech) or discuss it on [reddit](), [hackernews]().
+Help [improve this text](https://github.com/aybassiouny/mahdytech) or discuss it on [reddit](https://www.reddit.com/r/programming/comments/bntthh/more_is_sometimes_less_when_lower_load_can/), [hackernews](https://news.ycombinator.com/item?id=19894402).
 
 <script>!function(e,t,s,i){var n="InfogramEmbeds",o=e.getElementsByTagName("script")[0],d=/^http:/.test(e.location)?"http:":"https:";if(/^\/{2}/.test(i)&&(i=d+i),window[n]&&window[n].initialized)window[n].process&&window[n].process();else if(!e.getElementById(s)){var r=e.createElement("script");r.async=1,r.id=s,r.src=i,o.parentNode.insertBefore(r,o)}}(document,0,"infogram-async","https://e.infogram.com/js/dist/embed-loader-min.js");</script>
