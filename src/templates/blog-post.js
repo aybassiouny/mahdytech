@@ -11,13 +11,14 @@ class BlogPostTemplate extends React.Component {
     const post = this.props.data.markdownRemark
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
+    const image = post.frontmatter.socialPic? post.frontmatter.socialPic.childImageSharp.sizes.src : null
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
         <SEO
           title={post.frontmatter.seotitle || post.frontmatter.title}
           description={post.frontmatter.description || post.excerpt}
-          socialPic={post.frontmatter.socialPic}
+          socialPic={image}
         />
         <h1>{post.frontmatter.title}</h1>
         <p
@@ -89,11 +90,11 @@ export const pageQuery = graphql`
         socialPic {
           childImageSharp {
             sizes(maxWidth: 400) {
-              src
-              srcSet
-              sizes
+              ...GatsbyImageSharpSizes_tracedSVG
             }
           }
+          extension
+          publicURL
         }
       }
     }
