@@ -20,6 +20,15 @@ exports.createPages = ({ graphql, actions }) => {
               frontmatter {
                 title
                 seotitle
+                socialPic {
+                  childImageSharp {
+                    sizes(maxWidth: 400) {
+                      src
+                      srcSet
+                      sizes
+                    }
+                  }
+                }
               }
             }
           }

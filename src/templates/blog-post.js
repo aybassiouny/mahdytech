@@ -17,6 +17,7 @@ class BlogPostTemplate extends React.Component {
         <SEO
           title={post.frontmatter.seotitle || post.frontmatter.title}
           description={post.frontmatter.description || post.excerpt}
+          socialPic={post.frontmatter.socialPic}
         />
         <h1>{post.frontmatter.title}</h1>
         <p
@@ -85,6 +86,15 @@ export const pageQuery = graphql`
         date(formatString: "MMMM DD, YYYY")
         description
         seotitle
+        socialPic {
+          childImageSharp {
+            sizes(maxWidth: 400) {
+              src
+              srcSet
+              sizes
+            }
+          }
+        }
       }
     }
   }
