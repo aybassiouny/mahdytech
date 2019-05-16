@@ -3,6 +3,7 @@ title: "More is Sometimes Less: When Lower Load Triggers Higher Latencies"
 date: "2019-05-12T12:00:32.169Z"
 description: Latency was high at low QPS due to an OS optimization. Profile did not catch the delays because they were on the Kernel side of things.
 seotitle: When Lower Load Triggers Higher Latencies
+socialPic: AlvinStore.png
 ---
 
 - [Backdrop](#backdrop)
@@ -18,6 +19,8 @@ seotitle: When Lower Load Triggers Higher Latencies
 - [Conclusion](#conclusion)
 
 ## Backdrop
+
+![AlvinStore](./test.jpeg)
 
 As in [most posts](https://mahdytech.com/2019/01/13/curious-case-999-latency-hike/) - a distributed service was misbehaving, let's call this service Alvin. This time, I didn't discover the issue myself, it was instead reported by the team owning the client.
 
