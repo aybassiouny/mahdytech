@@ -20,8 +20,6 @@ socialPic: AlvinStore.png
 
 ## Backdrop
 
-![AlvinStore](./test.jpeg)
-
 As in [most posts](https://mahdytech.com/2019/01/13/curious-case-999-latency-hike/) - a distributed service was misbehaving, let's call this service Alvin. This time, I didn't discover the issue myself, it was instead reported by the team owning the client.
 
  One day, I woke up to a disgruntled email due to high latencies caused by Alvin, that we were planning to launch soon. In particular, the client was facing 99th latency around 50ms, way above our latency budget. That was surprising, as I have thoroughly tested this service, especially the latency - the point of complaint.
