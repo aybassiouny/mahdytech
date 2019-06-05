@@ -12,7 +12,7 @@ const customChart = function() {
     };
 
     const commonOptions = {
-        borderWidth: 1,
+        // borderWidth: 1,
         fill: false,
         lineTension: 0
     }
@@ -35,33 +35,6 @@ const customChart = function() {
             data: {
                 labels: ['Avg', '90th', '95th', '99th'],
                 datasets: datasetFromMD
-                // datasets: [{
-                //     label: '500 QPS',
-                //     data: [3, 10, 45, 50],
-                //     backgroundColor: window.chartColors.red,
-                //     borderColor: window.chartColors.red,
-                //     borderWidth: 1,
-                //     fill: false,
-                //     lineTension: 0
-                // },
-                // {
-                //     label: '1k QPS',
-                //     data: [2, 5, 15, 30],
-                //     backgroundColor: window.chartColors.blue,
-                //     borderColor: window.chartColors.blue,
-                //     borderWidth: 1,
-                //     fill: false,
-                //     lineTension: 0
-                // },
-                // {
-                //     label: '30k QPS',
-                //     data: [1, 2, 3, 5],
-                //     backgroundColor: window.chartColors.yellow,
-                //     borderColor: window.chartColors.yellow,
-                //     borderWidth: 1,
-                //     fill: false,
-                //     lineTension: 0
-                // }]
             },
             options: {
                 scales: {

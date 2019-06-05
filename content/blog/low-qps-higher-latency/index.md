@@ -143,7 +143,7 @@ It was pretty simple, and hindsight is 20/20 as usual. I placed my client in the
             },
             {
                 'label': 'Low QPS (Localhost Client)',
-                'data': [0.9,1.8,2.7,4.7]
+                'data': [0.8,1.7,2.5,4.5]
             }
         ]
     }
