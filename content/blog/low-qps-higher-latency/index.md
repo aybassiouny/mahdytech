@@ -6,6 +6,9 @@ seotitle: When Lower Load Triggers Higher Latencies
 socialPic: AlvinStore.png
 ---
 
+<canvas id="chart1" width="400" height="400"></canvas>
+
+
 - [Backdrop](#backdrop)
 - [Narrowing it Down](#narrowing-it-down)
   - [Data Store is Innocent](#data-store-is-innocent)
@@ -17,6 +20,7 @@ socialPic: AlvinStore.png
   - [Now, which OS are we on](#now-which-os-are-we-on)
   - [Nagle's algorithm](#nagles-algorithm)
 - [Conclusion](#conclusion)
+
 
 ## Backdrop
 
