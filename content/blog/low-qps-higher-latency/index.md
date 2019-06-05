@@ -6,9 +6,6 @@ seotitle: When Lower Load Triggers Higher Latencies
 socialPic: AlvinStore.png
 ---
 
-<canvas id="chart1" width="400" height="400"></canvas>
-
-
 - [Backdrop](#backdrop)
 - [Narrowing it Down](#narrowing-it-down)
   - [Data Store is Innocent](#data-store-is-innocent)
@@ -34,7 +31,24 @@ Since I am blogging about this - you probably figured it out already: their numb
 
 > Note: if you're not seeing the graphs refresh this page. I will try and remove this dependency in the next iteration.
 
-<div class="infogram-embed" data-id="5905fbdf-b2fc-4685-8503-f44bfd823319" data-type="interactive" data-title="Line Chart"></div>
+<canvas class="js-chart" width="400" height="400" data-chart="
+    {
+        'data': [
+            {
+                'label': '500 QPS',
+                'data': [3, 10, 45, 50]
+            },
+            {
+                'label': '1k QPS',
+                'data': [2, 5, 15, 30]
+            },
+            {
+                'label': '30k QPS',
+                'data': [1, 2, 3, 5]
+            }
+        ]
+    }
+    "></canvas>
 
 ## Narrowing it Down
 
@@ -56,7 +70,24 @@ Let's try to strike through some names.
 
 First thing I did was converting Alvin into a ping-ping server, a server that does no request processing and once it gets a request, returns an empty response. If latency improves, then my implementation for Alvin or Data Store has a bug - nothing unheard of. This yielded the graph for the first experiment:
 
-<div class="infogram-embed" data-id="75e7d91d-4529-4983-bd33-5b72395fe642" data-type="interactive" data-title="Copy: Line Chart"></div>
+<canvas class="js-chart" width="400" height="400" data-chart="
+    {
+        'data': [
+            {
+                'label': 'High QPS',
+                'data': [1,2,3,5]
+            },
+            {
+                'label': 'Low QPS',
+                'data': [3,10,45,50]
+            },
+            {
+                'label': 'Low QPS (Ping Pong Alvin)',
+                'data': [3,9,46,49]
+            }
+        ]
+    }
+    "></canvas>
 
 As the graph shows, there is no improvement when using a ping-pong server, meaning that Data Store is not contributing to the latency hike, our suspect list is shortened to half:
 
@@ -95,7 +126,28 @@ From the start, the 50ms latency number has been bugging me. 50ms is *a lot* of 
 
 It was pretty simple, and hindsight is 20/20 as usual. I placed my client in the same machine as Alvin, and sent the request to `localhost`. And the latency increase was gone!  
 
-<div class="infogram-embed" data-id="23d128c0-96e8-4db6-b65b-c069f1e1348e" data-type="interactive" data-title="ping-pong Alvin"></div>
+<canvas class="js-chart" width="400" height="400" data-chart="
+    {
+        'data': [
+            {
+                'label': 'High QPS',
+                'data': [1,2,3,5]
+            },
+            {
+                'label': 'Low QPS',
+                'data': [3,10,45,50]
+            },
+            {
+                'label': 'Low QPS (Ping Pong Alvin)',
+                'data': [3,9,46,49]
+            },
+            {
+                'label': 'Low QPS (Localhost Client)',
+                'data': [0.9,1.8,2.7,4.7]
+            }
+        ]
+    }
+    "></canvas>
 
 Something was wrong with the network.
 
@@ -115,7 +167,24 @@ So, it was not my code, gRPC implementation or the network causing the delays. I
 
 `gRPC` is widely adopted on Linux, however its Windows adoption is not even close. I decided to run the experiment that worked: I spun a Linux VM and compiled Alvin for Linux, and deployed it.  
 
-<div class="infogram-embed" data-id="9adef12a-ba95-40e9-b04e-d20dd2f94f96" data-type="interactive" data-title="Copy: Localhost"></div>
+<canvas class="js-chart" width="400" height="400" data-chart="
+    {
+        'data': [
+            {
+                'label': 'Low QPS Baseline',
+                'data': [3,10,45,50]
+            },
+            {
+                'label': 'Windows Sample',
+                'data': [3,9,46,49]
+            },
+            {
+                'label': 'Linux Sample',
+                'data': [1,1.7,2.6,4.6]
+            }
+        ]
+    }
+    "></canvas>
 
 Lo and behold: Linux ping-pong server didn't have the latency issues of its Windows peer, despite using my source being the same. `gRPC`'s Windows implementation had a problem.
 
@@ -123,7 +192,28 @@ Lo and behold: Linux ping-pong server didn't have the latency issues of its Wind
 
 All along, I had thought I was missing a `gRPC` flag, now I realized it might actually be `gRPC` that was missing a Windows flag. I searched an internal RPC library that I knew to behave well for all the [Winsock](https://docs.microsoft.com/en-us/windows/desktop/winsock/windows-sockets-start-page-2) flags it set. I then went ahead and added all of them to gRPC, and deployed Alvin on Windows, and that fixed Windows ping-pong server!  
 
-<div class="infogram-embed" data-id="87deea72-c1d5-4541-ab76-1c5f667bff86" data-type="interactive" data-title="AllTheFlags"></div>
+<canvas class="js-chart" width="400" height="400" data-chart="
+    {
+        'data': [
+            {
+                'label': 'Low QPS Baseline',
+                'data': [3,10,45,50]
+            },
+            {
+                'label': 'Windows Sample',
+                'data': [3,9,46,49]
+            },
+            {
+                'label': 'Linux Sample',
+                'data': [1,1.7,2.6,4.6]
+            },
+            {
+                'label': 'Windows Sample With Winsock Flags',
+                'data': [1.1,2.2,3,5]
+            }
+        ]
+    }
+    "></canvas>
 
 *Almost* there: I removed the flags I added  one by one until regression returned, so that I could pin the one flag that made the difference. It was the infamous [TCP_NODELAY](https://docs.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-setsockopt), the switch for Nagle's algorithm.
 
