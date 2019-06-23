@@ -6,6 +6,20 @@ description: Spawning a RESTful C++ app on an Azure fleet, using C++ REST SDK fo
 
 I have mostly been working on the details of rather big projects, and that can make one lose touch with end-to-end magic. This week I decided to create a very simple distributed C++ web app, running on an Azure fleet. I settled on using Service Fabric as a distributed framework and CPPREST SDK for building the C++ web server. This is how it went!
 
+- [Service fabric](#service-fabric)
+  - [How to Get it](#how-to-get-it)
+  - [How to Run it](#how-to-run-it)
+  - [Let's move to the cloud](#lets-move-to-the-cloud)
+- [Who said C++ is ancient: CPP Rest SDK](#who-said-c-is-ancient-cpp-rest-sdk)
+  - [Interlude: vcpkg](#interlude-vcpkg)
+  - [A REST web server](#a-rest-web-server)
+- [Putting It Together](#putting-it-together)
+  - [Credentials](#credentials)
+    - [Certificates](#certificates)
+  - [Port Listening Error](#port-listening-error)
+  - [Final Result](#final-result)
+- [Last Words](#last-words)
+
 ## Service fabric
 
 ![Service Fabirc](./SF.jpg)
