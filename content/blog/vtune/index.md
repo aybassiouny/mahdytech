@@ -16,7 +16,7 @@ Put in another way, while OS-reported CPU usage levels are effective in many (mo
 
 I was pleasantly surprised to see that personal use for VTune has become [free](https://software.intel.com/en-us/vtune/choose-download#standalone), I recall that up until recently it was only an evaluation. The 2019 edition comes with pretty sleek GUI and great integration with Visual Studio, using VTune from within Visual Studio is straightforward and fits nicely into the usual development cycle.
 
-![VTune inside Visual Studio](./vtune_inside_vs.png)
+![VTune inside Visual Studio](./vtune_inside_vs.PNG)
 
 Note using "Microarchitecture Exploration" under the How, VTune is capable of doing User-Mode sampling, but I would rather use XPerf or [F1](https://docs.microsoft.com/en-us/visualstudio/profiling/how-to-install-the-stand-alone-profiler?view=vs-2019) for that.
 
@@ -46,7 +46,7 @@ The column major traversal has a huge issue: it will trigger vastly more cache m
 
 Let's take a look how each traversal looks like:
 
-![Traversal](.\rowcolumnarrays.jpg)
+![Traversal](./rowcolumnarrays.jpg)
 <center>Source: <a href=https://craftofcoding.wordpress.com/2017/02/03/column-major-vs-row-major-arrays-does-it-matter/>craftofcoding</a></center>
 
 When element `1` is read, adjacent elements `2` and `3` are brought into cache, which comes in handy when we access them next, as we don't need to do a memory access again. However, in a column-major access pattern we lose this advantage, as after we bring `2` and `3` we don't access them and access `4` instead, and bring its neighbors: `5` and `6`, then, oops, we don't use that either and access `7`.
@@ -59,8 +59,8 @@ At first, I tried using a small array of several MBs, but array creation itself 
 
 Then, I had forgotten adding symbols - and while the VTuner interface does not stress adding them, results were useless without symbols. Don't forget to add them from capture dialog:
 
-![Adding Symbols](.\symbols_1.png)
-![Adding Symbols](.\symbols_2.png)
+![Adding Symbols](./symbols_1.PNG)
+![Adding Symbols](./symbols_2.PNG)
 <center>Adding Symbols to VTune</center>
 
 - VTune helps dig deeper more than any other tool, using Hardware Profile TPM 
