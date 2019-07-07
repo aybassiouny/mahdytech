@@ -6,6 +6,16 @@ description:
 
 I had heard about [VTune](https://software.intel.com/en-us/vtune) a while ago as a hardcore profiler at the processor instruction level, however I never got the chance to play around with it. This blog - and maybe others in future - will narrate my trials to get a hang of VTune.
 
+- [First things first: What's VTune](#First-things-first-Whats-VTune)
+  - [Getting VTune](#Getting-VTune)
+- [Let's Take VTune for a Ride: Cache Misses](#Lets-Take-VTune-for-a-Ride-Cache-Misses)
+  - [Row-Major and Column-Major Array Access](#Row-Major-and-Column-Major-Array-Access)
+  - [Profiling with VTune](#Profiling-with-VTune)
+  - [Column-Major Access](#Column-Major-Access)
+  - [Row-Major Access](#Row-Major-Access)
+  - [Can We Make it Faster?](#Can-We-Make-it-Faster)
+- [Conclusion](#Conclusion)
+
 ## First things first: What's VTune
 
 VTune is a [profiler](https://en.wikipedia.org/wiki/Profiling_(computer_programming)), capable of a very similar job to CPU sampled profiling in [XPerf](https://mahdytech.com/2019/01/13/curious-case-999-latency-hike/#f1-profile0) or Visual Studio debugger. However, VTune has a huge edge: it supports hardware-based event sampling, using a special chip on Intel processors called the [Performance Monitoring Unit](https://software.intel.com/en-us/articles/intel-performance-counter-monitor) (PMU). VTune uses events reported by PMU to report a much more detailed description of instruction-level events, such as being [front-end bound](https://software.intel.com/en-us/vtune-amplifier-help-front-end-bound) or [back-end bound](https://software.intel.com/en-us/vtune-amplifier-help-back-end-bound).
@@ -55,13 +65,24 @@ Let's see how VTune can profile this.
 
 ### Profiling with VTune
 
-At first, I tried using a small array of several MBs, but array creation itself was 
+In order to test the effects of array access pattern, I made a tiny app that builds an array, then tries to sum its elements 1000 times, so as to emulate a real CPU effort without creating a humongous array. I created two versions, one with row-major and one with column-major access for the array as shown above.
 
-Then, I had forgotten adding symbols - and while the VTuner interface does not stress adding them, results were useless without symbols. Don't forget to add them from capture dialog:
+I started a profile then, but I had forgotten adding symbols - and while the VTuner interface does not stress adding them, results were useless without symbols. Don't forget to add them from capture dialog:
 
 ![Adding Symbols](./symbols_1.PNG)
+
 ![Adding Symbols](./symbols_2.PNG)
 <center>Adding Symbols to VTune</center>
+
+Let's have a look at the results!
+
+### Column-Major Access
+
+### Row-Major Access
+
+### Can We Make it Faster
+
+## Conclusion
 
 - VTune helps dig deeper more than any other tool, using Hardware Profile TPM 
 - I am just a newbie with this, I will try to emulate cache misses through the textbook example: row vs column on a big array
