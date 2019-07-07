@@ -26,7 +26,7 @@ It is good to have an approximate idea how much memory an app is expected to use
 
 One day, I found out one of my services, running in a cloud cluster, is using a couple hundred MBs more than expected. There was one issue that differentiated this from a standard memory leak: the leak took place excruciatingly slowly:
 
-![Memory Usage](./MemoryUsage.png){.aligncenter}
+![Memory Usage](./MemoryUsage.png)
 
 Note how the issue only materializes several days after running without restart, and even a week after, it only accounts for a 400 MB leak, a measly 1% of total app memory usage. (From here on, I refer to memory usage and [private bytes](https://mahdytech.com/2019/01/05/task-manager-memory-info/) interchangeably).
 
@@ -123,7 +123,7 @@ And the last step produces the analysis log we need:
 
 Additionally, UMDH [visualization tool by Nettention](https://github.com/Nettention/UmdhViz) provides a great way to visualize analysis log:
 
-![Visuallizing umdh output](./vis.png){.aligncenter}
+![Visuallizing umdh output](./vis.png)
 
 See, `UMDH` becomes most useful in comparison mode, where multiple **snapshots** (starting point and endpoint) are captured and diff'd into an analysis log containing the allocations happening in between. This was immensely helpful in my case - I am not interested in the first 50 GB of expected allocations, but the unexpected extra 200 MBs.
 
