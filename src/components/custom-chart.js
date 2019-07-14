@@ -21,8 +21,8 @@ const customChart = function() {
 
     document.querySelectorAll('.js-chart').forEach(el => {
         var chartData = JSON.parse(el.dataset.chart.replace(/'/g, '"'));
-        
         let datasetFromMD = chartData.data;
+        var chartLabels = el.dataset.labelsChart.split(',');
 
         for (let i = 0; i < datasetFromMD.length; i++) {
             datasetFromMD[i] = Object.assign({}, commonOptions, datasetFromMD[i]);
@@ -30,20 +30,62 @@ const customChart = function() {
             datasetFromMD[i].borderColor = chartColors[colors[i]];
         }
 
+        let yaxisType = el.dataset.yaxisChart? el.dataset.yaxisChart  : 'linear'; 
+        let yaxisConfig = [];
+        if (yaxisType !== 'logarithmic') 
+        {
+            yaxisConfig = [{
+                display: true,
+                type: yaxisType,
+                beginAtZero: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: el.dataset.yaxisName
+                },
+            }]
+        }
+        else
+        {
+            let afterBuildTicksFunc = function (chartObj) { //Build ticks labelling as per your need
+                chartObj.ticks = [];
+                chartObj.ticks.push(1);
+                chartObj.ticks.push(10);
+                chartObj.ticks.push(100);
+                chartObj.ticks.push(1000);
+                chartObj.ticks.push(10000);
+                chartObj.ticks.push(100000);
+                chartObj.ticks.push(1000000);
+                chartObj.ticks.push(10000000);
+            };
+    
+            let htmlTicks = {
+                min: 1, //minimum tick
+                max: 10000000, //maximum tick
+                callback: function (value, index, values) {
+                    return Number(value.toString());//pass tick values as a string into Number function
+                }
+            };
+
+            yaxisConfig = [{
+                display: true,
+                type: yaxisType,
+                beginAtZero: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: el.dataset.yaxisName
+                },
+                ticks: htmlTicks,
+                afterBuildTicks: afterBuildTicksFunc
+            }];
+        }
+
         new Chart(el, {
             type: 'line',
             data: {
-                labels: ['Avg', '90th', '95th', '99th'],
+                labels: chartLabels,
                 datasets: datasetFromMD
             },
             options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                },
                 tooltips: {
 					mode: 'index',
 					intersect: false,
@@ -57,16 +99,10 @@ const customChart = function() {
 						display: true,
 						scaleLabel: {
 							display: true,
-							labelString: 'Latency Percentile'
+							labelString: el.dataset.xaxisName
 						}
 					}],
-					yAxes: [{
-						display: true,
-						scaleLabel: {
-							display: true,
-							labelString: 'Latency in ms'
-						}
-					}]
+					yAxes: yaxisConfig
 				}
             }
         });
