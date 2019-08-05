@@ -1,10 +1,10 @@
 ---
 title: Profiling Processor Cache Misses with VTune
-date: "2019-07-01T12:00:32.169Z"
-description: 
+date: "2019-07-31T12:00:32.169Z"
+description: VTune is a processor instruction level profiler,
 ---
 
-I had heard about [VTune](https://software.intel.com/en-us/vtune) a while ago as a hardcore profiler at the processor instruction level, however I never got the chance to play around with it. This blog - and maybe others in future - will narrate my trials to get a hang of VTune.
+I heard about [VTune](https://software.intel.com/en-us/vtune) a while ago as a processor instruction level profiler, but I never got the chance to play around with it. This blog - and maybe others in future - will narrate my trials to get a hang of VTune.
 
 - [First things first: What's VTune](#First-things-first-Whats-VTune)
   - [Getting VTune](#Getting-VTune)
@@ -16,41 +16,37 @@ I had heard about [VTune](https://software.intel.com/en-us/vtune) a while ago as
   - [Can We Make it Faster?](#Can-We-Make-it-Faster)
 - [Conclusion](#Conclusion)
 
-## First things first: What's VTune
+## First things first: What is VTune
 
-VTune is a [profiler](https://en.wikipedia.org/wiki/Profiling_(computer_programming)), capable of a very similar job to CPU sampled profiling in [XPerf](https://mahdytech.com/2019/01/13/curious-case-999-latency-hike/#f1-profile0) or Visual Studio debugger. However, VTune has a huge edge: it supports hardware-based event sampling, using a special chip on Intel processors called the [Performance Monitoring Unit](https://software.intel.com/en-us/articles/intel-performance-counter-monitor) (PMU). VTune uses events reported by PMU to report a much more detailed description of instruction-level events, such as being [front-end bound](https://software.intel.com/en-us/vtune-amplifier-help-front-end-bound) or [back-end bound](https://software.intel.com/en-us/vtune-amplifier-help-back-end-bound).
+VTune is a [profiler](https://en.wikipedia.org/wiki/Profiling_(computer_programming)) capable of a similar job to CPU sampled profiling in [XPerf](https://mahdytech.com/2019/01/13/curious-case-999-latency-hike/#f1-profile0) or Visual Studio debugger, with a significant edge: it supports hardware-based event sampling, using a special chip on Intel processors called the [Performance Monitoring Unit](https://software.intel.com/en-us/articles/intel-performance-counter-monitor) (PMU). Using events reported by the PMU, VTune can give an in-depth look into an application's performance, as well as a general "verdict", such as being [front-end bound](https://software.intel.com/en-us/vtune-amplifier-help-front-end-bound) or [back-end bound](https://software.intel.com/en-us/vtune-amplifier-help-back-end-bound).
 
-Put in another way, while OS-reported CPU usage levels are effective in many (most?) cases, the time comes when we need deeper insight into which bottleneck the processor is facing, and how to make this piece of code faster. In my experience, this is mostly beneficial in tight loops or portions of the code on the ultra-hot path. In many cases, there are 50 lines of code that are responsible for more CPU usage than the thousands of lines in the rest of of the application, it is for those 50 lines that VTune can come in handy.
+While OS-reported CPU usage levels are effective in many cases, the time comes when we need deeper insight into what is happening on the hardware level. In my experience, this is mostly beneficial in tight loops or portions of the code on an ultra-hot path: those 50 lines of code that are responsible for more CPU usage than the thousands of lines in the rest of of the application, it is for those 50 lines that VTune can come in handy.
 
 ### Getting VTune
 
-I was pleasantly surprised to see that personal use for VTune has become [free](https://software.intel.com/en-us/vtune/choose-download#standalone), I recall that up until recently it was only an evaluation. The 2019 edition comes with pretty sleek GUI and great integration with Visual Studio, using VTune from within Visual Studio is straightforward and fits nicely into the usual development cycle.
-
-![VTune inside Visual Studio](./vtune_inside_vs.PNG)
-
-Note using "Microarchitecture Exploration" under the How, VTune is capable of doing User-Mode sampling, but I would rather use XPerf or [F1](https://docs.microsoft.com/en-us/visualstudio/profiling/how-to-install-the-stand-alone-profiler?view=vs-2019) for that.
+I was pleasantly surprised to see that personal use for VTune has become [free](https://software.intel.com/en-us/vtune/choose-download#standalone), up until recently it was only a 30-day evaluation. The 2019 edition comes with a sleek GUI and great integration with Visual Studio. Using VTune from within Visual Studio is straightforward and fits nicely into the usual development cycle.
 
 ## Let's Take VTune for a Ride: Cache Misses
 
-We're always taught to build applications to be [cache-friendly](https://www.youtube.com/watch?v=WDIkqP4JbkE&feature=youtu.be), but such things are easier said than done. Now, if we can *detect* being non-cache friendly and fix it, that's powerful.
+We're always taught to build applications to be [cache-friendly](https://www.youtube.com/watch?v=WDIkqP4JbkE&feature=youtu.be), but such things are easier said than done. Now, if we can *detect* being non-cache friendly and fix it, that's powerful. For my first VTune experiment, I want to explore if it can detect cache unfriendliness.
 
-### Row-Major and Column-Major Array Access
+### Row-Major and Column-Major 2D Array Traversal
 
-The classic example for cache misses is usually the very simple array traversal problem. Say, we need to find sum of all elements in an array, we could either loop on rows, or on columns:
+A classic example for cache misses is the 2D array traversal problem. Say, we need to find sum of all elements in an array, we could either loop on rows, or on columns:
 
 ``` cpp
-// row major
+// row major traversal
 for (int i = 0; i < numRows; ++i)
     for (int j = 0; j < numColumns; ++j)
         sum += matrix[i][j];
 
-// column major
+// column major traversal
 for (int i = 0; i < numRows; ++i)
     for (int j = 0; j < numColumns; ++j)
         sum += matrix[j][i];
 ```
 
-The column major traversal has a huge issue: it will trigger vastly more cache misses than row-major traversal.
+To choose a row or a column-major design depends entirely on how the matrix is represented in memory. Assuming `matrix` is an array of pointers (e.g. `int**` or a `vector<vector<int>>` the column major traversal has a huge issue: it will trigger vastly more cache misses than row-major traversal.
 
 > For an overview of what's a cache miss and CPU memory access costs checkout ["Why do CPUs have multiple cache levels?"](https://fgiesen.wordpress.com/2016/08/07/why-do-cpus-have-multiple-cache-levels/)
 
@@ -59,11 +55,13 @@ A picture makes things easier:
 ![Traversal](./rowcolumnarrays.jpg)
 <center>Source: <a href=https://craftofcoding.wordpress.com/2017/02/03/column-major-vs-row-major-arrays-does-it-matter/>craftofcoding</a></center>
 
-When element `1` is read, adjacent elements `2` and `3` are brought into cache, which comes in handy when we access them next, as we don't need to do a memory access again. However, in a column-major access pattern we lose this advantage, as after we bring `2` and `3` we don't access them and access `4` instead, and bring its neighbors: `5` and `6`, then, oops, we don't use that either and access `7`.
+When element `1` is read, adjacent elements `2` and `3` are brought into the cache, which comes in handy as we access them next. However, a column-major pattern accesses `4` afterwards, not utilizing `2` or `3` that we already have in cache, and incurring an additional memory access. 
 
-### How Fast is This
+> Note that the above is a toy sample, and there need be more than 3 elements per row, otherwise the whole array could be cached.
 
-In order to test the effects of array access pattern, I made a tiny app that builds an array, then tries to sum its elements 1000 times, so as to emulate a real CPU effort without creating a humongous array. I created two versions, one with row-major and one with column-major access for the array as shown above.
+### How Slow is This
+
+In order to test the effects of array access pattern, I used a tiny app that builds an array, then tries to sum its elements 1000 times, so as to emulate a real CPU load. I created two versions, one with row-major and one with column-major access for the array, code for both is on [github](https://github.com/aybassiouny/mahdytech/tree/master/content/blog). Then, I ran both examples for varying array sizes: 
 
 <canvas class="js-chart" width="400" height="400" data-chart="
     {
@@ -84,50 +82,48 @@ In order to test the effects of array access pattern, I made a tiny app that bui
     data-yaxis-name = "Latency in Nanoseconds" data-xaxis-name = "Array Size"
     ></canvas>
 
-The graph shows clearly that as array size goes beyond tiny, where whole array might even be cached, row-major access is the very clear winner. Let's see how VTune can profile this.
+The graph shows clearly that as array size goes beyond several elements, where whole array might even be cached, row-major access is the very clear winner. Now that we have a ripe test case, let's see how VTune can profile this.
 
 ## Profiling with VTune
 
-I started a profile, but I had forgotten to add symbols - and while the VTuner interface does not stress adding them, results were useless without symbols. Don't forget to add them from capture dialog:
+From Vistual Studio, it is straightforward to trigger a VTune profile by clicking `Profile with VTune Amplifier`, adjusting config, then clicking `Start`: 
+
+![VTune inside Visual Studio](./vtune_inside_vs.PNG)
+
+Note using `Microarchitecture Exploration` under the How, as VTune is capable of doing User-Mode sampling, but I would rather use XPerf or [F1](https://docs.microsoft.com/en-us/visualstudio/profiling/how-to-install-the-stand-alone-profiler?view=vs-2019) for that.
+
+One more note is to make sure to set paths for system symbols. While VTune interface does not stress adding them, results were useless without system symbols:
 
 ![Adding Symbols](./symbols_1.PNG)
 
 ![Adding Symbols](./symbols_2.PNG)
 <center>Adding Symbols to VTune</center>
 
-Let's have a look at the results!
+> One last note - VTune also supports profile using a portable executable, allowing for capture & analysis to happen on different machines.
 
-### Row-Major Access
-
-Let's first have a look at row-major array access, in order to get a baseline for what looks "good".  
-
-![Row Major](./row_major.PNG)
-
-First things first, the 32.8% Retiring (in green) is the number to look for: it means out of all operations performed by the processor, 32% actually proved to be needed and got *retired*. Keep in mind that the processor tries to be a step ahead, and in a best case scenario this number should be as high as possible. 
-
-The red box below shows we still have limitation with our implementaiton, we'll go back to this in a [bit](#Can-We-Make-it-Faster).
+A profile capture is now ready - let's have a look at the results!
 
 ### Column-Major Access
 
-Now that we have a baseline established, let's run the column-major code and profile that:
+In this test, I used an array of size 2048, and ran that operation for 200 times. Running VTune for the app resulted in:
 
 ![Column Major](./column_major.PNG)
 
-That's more like it. As trivial as this example is - I was impressed by the verbose verdict. We're getting a lot of cache misses, and accessing RAM too much.
+As trivial as this example is - I was impressed by the verbose verdict. The `Memory Bound` red box aligns well with our expectations, we're accessing too much memory and too little cache.
 
-### Can We Make it Faster
+### Row-Major Access
 
-Before signing off, I wanted to explore improving the row-major access. The red part we had, showed we're `Core Bound`, which 
+Next, I ran same app with a small change in indices used to access the array:  
 
-I had another look at my implementation and the problem was clear: I was using a `vector<vector<>>` instead of linearlizing the 2D array, so after finishing each row the processor would not be able to predict the next element. Replacing that with one array and rerunning VTune: 
+![Row Major](./row_major.PNG)
 
-![Row Major](./row_major2.PNG)
+Note the "Elapsed Time" of 2.5s, a 7x speedup over the row-major test. Furthermore, the 30.5% `Retiring` box (in green) represents the percentage of instructions the processor successfully predicted & executed, a higher number represents more efficient execution - again aligning with expectations.
 
-Now that's what I am talking about. It is interesting how we can see more than 100% of instructions, since the processor can still make branch mispredictions even when retiring 100% of instructions.
+Note that VTune makes it clear this is by far not a perfect implementation, and shows a couple of red boxes. The red `Core Bound` box below represents backend non-memory issues, in our case *probably* referring to missing out on [vectorizing instructions](https://www.codingame.com/playgrounds/283/sse-avx-vectorization) for array traversal and sum. The other red box, `Memory Bound` *probably* refers to the inter-dependency of our stores: all array accesses are appended to the same variable `sum`, and dependent stores are hard to parallelize.
 
 ## Conclusion
 
-I am pretty impressed with VTune so far, and wonder how does it scale for profiling production-scale applications. Nonetheless, VTune is educational, I have learnt a bunch about hardware, for example what retired instructions are, even though I ran one of the simplest examples possible.
+I am pretty impressed with VTune so far, and wonder how does it scale for profiling production-scale applications. Nonetheless, VTune is educational, I have learnt a bunch about hardware, even though I ran one of the simplest examples possible.
 
 Code samples & VTune captures for those interested in further debugging are in the [post material](). Thanks for reading!
 ___
