@@ -32,7 +32,7 @@ The application in hand followed a pretty straightforward pipeline for a server:
    2. Thread returns a response to IO Dispatcher
 4. IO Dispatcher Returns Response
 
-![ApplicationOverview](./Start.png){.aligncenter}
+![ApplicationOverview](./Start.png)
 
 > Note: the separation of dispatcher and processing ThreadPool is almost always a good idea. This way, we're not blocking IO in case the processing is taking longer than it should.
 
@@ -48,7 +48,7 @@ Response ProcessRequest(Request request)
 
 Note that `ProcessRequest` is executed in parallel by several threads in a thread pool. The number of threads in the thread pool is set to a constant number at runtime - usually equal to the number of logical cores in the server, as is [usually recommended](https://blogs.technet.microsoft.com/markrussinovich/2009/07/05/pushing-the-limits-of-windows-processes-and-threads/). For simplicity, let's suppose we are running a server with 2 logical cores. Here's request flow at this stage:
 
-![Processing Overview](./NormalProcessing.png){.aligncenter}
+![Processing Overview](./NormalProcessing.png)
 
 > Note that these are logical threads, not [hardware threads](https://stackoverflow.com/questions/5593328/software-threads-vs-hardware-threads).
 
@@ -114,11 +114,11 @@ It was easy to add, and we didn't have to change a lot of code. Great! it also t
 
 Let's take a second and reason about this. We have added an extra IO operation, which is a remote call to another machine. Hence, the majority of the added work is not done locally, but on another machine and (more importantly) in transport. Why did we lose so much throughput then? To visualize the issue, let's have a look at how our threads work now:
 
-![Add IO](./AddingIO.png){.aligncenter}
+![Add IO](./AddingIO.png)
 
 Now, what if a 3rd request comes along?
 
-![IO Limbo](./IOLimbo.png){.aligncenter}
+![IO Limbo](./IOLimbo.png)
 
 *this limbo is the interval between submitting work to the thread pool, and a thread becoming ready to process this work.
 
@@ -132,7 +132,7 @@ Doing IO within the hot path is an inevitable evil. CPUs are just faster. Which 
 
 Following the same request flow model from above, our goal is to achieve something close to:
 
-![Solution](./Solution.png){.aligncenter}
+![Solution](./Solution.png)
 
 To put it in words, we'd like to replace wait time by actually doing some work. This is achieved through [Cooperative Scheduling](https://luminousmen.com/post/asynchronous-programming-cooperative-multitasking). Basically, instead of thread `T1` waiting for an IO to end then execute a function `foo`, we pass `foo` as a callback to the IO call and ask the dispatcher to execute this callback once IO is done. Now, `T1` is free to handle more requests with no wait.
 

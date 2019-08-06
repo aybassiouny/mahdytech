@@ -46,7 +46,7 @@ Since I am blogging about this - you probably figured it out already: their numb
             }
         ]
     }
-    "></canvas>
+    " data-labels-chart = "Avg,90th,95th,99th" data-labels-chart = "Avg,90th,95th,99th" data-yaxis-name = "Latency in Milliseconds" data-xaxis-name = "Latency Percentile"></canvas>
 
 ## Narrowing it Down
 
@@ -85,7 +85,7 @@ First thing I did was converting Alvin into a ping-ping server, a server that do
             }
         ]
     }
-    "></canvas>
+    " data-labels-chart = "Avg,90th,95th,99th" data-yaxis-name = "Latency in Milliseconds" data-xaxis-name = "Latency Percentile"></canvas>
 
 As the graph shows, there is no improvement when using a ping-pong server, meaning that Data Store is not contributing to the latency hike, our suspect list is shortened to half:
 
@@ -145,7 +145,7 @@ It was pretty simple, and hindsight is 20/20 as usual. I placed my client in the
             }
         ]
     }
-    "></canvas>
+    " data-labels-chart = "Avg,90th,95th,99th" data-yaxis-name = "Latency in Milliseconds" data-xaxis-name = "Latency Percentile"></canvas>
 
 Something was wrong with the network.
 
@@ -182,7 +182,7 @@ So, it was not my code, gRPC implementation or the network causing the delays. I
             }
         ]
     }
-    "></canvas>
+    " data-labels-chart = "Avg,90th,95th,99th" data-yaxis-name = "Latency in Milliseconds" data-xaxis-name = "Latency Percentile"></canvas>
 
 Lo and behold: Linux ping-pong server didn't have the latency issues of its Windows peer, despite using my source being the same. `gRPC`'s Windows implementation had a problem.
 
@@ -211,7 +211,7 @@ All along, I had thought I was missing a `gRPC` flag, now I realized it might ac
             }
         ]
     }
-    "></canvas>
+    " data-labels-chart = "Avg,90th,95th,99th" data-yaxis-name = "Latency in Milliseconds" data-xaxis-name = "Latency Percentile"></canvas>
 
 *Almost* there: I removed the flags I added  one by one until regression returned, so that I could pin the one flag that made the difference. It was the infamous [TCP_NODELAY](https://docs.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-setsockopt), the switch for Nagle's algorithm.
 
@@ -227,5 +227,3 @@ The next time you see higher latency coinciding with lower QPS, Nagle's algorith
 
 ___
 Help [improve this text](https://github.com/aybassiouny/mahdytech) or discuss it on [reddit](https://www.reddit.com/r/programming/comments/bntthh/more_is_sometimes_less_when_lower_load_can/), [hackernews](https://news.ycombinator.com/item?id=19894402).
-
-<script>!function(e,t,s,i){var n="InfogramEmbeds",o=e.getElementsByTagName("script")[0],d=/^http:/.test(e.location)?"http:":"https:";if(/^\/{2}/.test(i)&&(i=d+i),window[n]&&window[n].initialized)window[n].process&&window[n].process();else if(!e.getElementById(s)){var r=e.createElement("script");r.async=1,r.id=s,r.src=i,o.parentNode.insertBefore(r,o)}}(document,0,"infogram-async","https://e.infogram.com/js/dist/embed-loader-min.js");</script>
