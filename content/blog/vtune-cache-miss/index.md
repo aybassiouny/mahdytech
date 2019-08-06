@@ -164,4 +164,4 @@ I am impressed with VTune so far and wonder how does it scale for profiling prod
 Code samples & VTune captures for those interested in further debugging are in the [post material](https://github.com/aybassiouny/mahdytech/tree/master/content/blog/vtune-cache-miss/Captures). Thanks for reading!
 ___
 
-Help [improve this text]() or discuss it on [reddit](), [hackernews]().
+Help [improve this text](https://github.com/aybassiouny/mahdytech/issues) or discuss it on [reddit](https://www.reddit.com/r/programming/comments/cmuhvd/profiling_processor_cache_misses_with_vtune/), [hackernews](https://news.ycombinator.com/item?id=20628120).
