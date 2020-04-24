@@ -45,22 +45,24 @@ class BlogPostTemplate extends React.Component {
         />
         <Bio />
 
-        <form netlify name="comments-queue">
-          <input name="path" type="hidden" value="{{ page.url }}" />
+        <form name="contact" method="POST" data-netlify="true">
           <p>
-            <label for="name">Your name</label>
-            <input type="text" name="name" id="name" />
+            <label>Your Name: <input type="text" name="name" /></label>   
           </p>
           <p>
-            <label for="email">Your email</label>
-            <input type="email" name="email" id="email" />
+            <label>Your Email: <input type="email" name="email" /></label>
           </p>
           <p>
-            <label for="comment">Your comment</label>
-            <textarea name="comment" id="comment"></textarea>
+            <label>Your Role: <select name="role[]" multiple>
+              <option value="leader">Leader</option>
+              <option value="follower">Follower</option>
+            </select></label>
           </p>
           <p>
-            <button type="submit">Post your comment</button>
+            <label>Message: <textarea name="message"></textarea></label>
+          </p>
+          <p>
+            <button type="submit">Send</button>
           </p>
         </form>
 
