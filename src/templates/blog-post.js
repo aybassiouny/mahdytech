@@ -46,7 +46,7 @@ class BlogPostTemplate extends React.Component {
         <Bio />
 
         <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
-          <input name="path" type="hidden" value="{{ page.url }}" />
+          <input name="path" type="hidden" value={post.frontmatter.title} />
           <input type="hidden" name="form-name" value="contact" />
           <p>
             <label>Your Name: <input type="text" name="name" /></label>   
