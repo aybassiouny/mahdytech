@@ -46,18 +46,13 @@ class BlogPostTemplate extends React.Component {
         <Bio />
 
         <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+          {/* <input name="path" type="hidden" value="{{ page.url }}" /> */}
           <input type="hidden" name="form-name" value="contact" />
           <p>
             <label>Your Name: <input type="text" name="name" /></label>   
           </p>
           <p>
-            <label>Your Email: <input type="email" name="email" /></label>
-          </p>
-          <p>
-            <label>Your Role: <select name="role[]" multiple>
-              <option value="leader">Leader</option>
-              <option value="follower">Follower</option>
-            </select></label>
+            <label>Your Email: (optional) <input type="email" name="email" /></label>
           </p>
           <p>
             <label>Message: <textarea name="message"></textarea></label>
