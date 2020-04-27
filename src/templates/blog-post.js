@@ -7,6 +7,9 @@ import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography";
 
 import customChart from '../components/custom-chart';
+import { Input, Button, InputLabel, TextareaAutosize, TextField } from '@material-ui/core';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 class BlogPostTemplate extends React.Component {
   componentDidMount() {
@@ -38,29 +41,39 @@ class BlogPostTemplate extends React.Component {
           {post.frontmatter.date}
         </p>
         <div dangerouslySetInnerHTML={{ __html: post.html }} />
-        <hr
-          style={{
-            marginBottom: rhythm(1),
-          }}
-        />
-        <Bio />
+        <hr />
 
         <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
           <input name="path" type="hidden" value={post.frontmatter.title} />
           <input type="hidden" name="form-name" value="contact" />
-          <p>
-            <label>Your Name: <input type="text" name="name" /></label>   
-          </p>
-          <p>
-            <label>Your Email: (optional) <input type="email" name="email" /></label>
-          </p>
-          <p>
-            <label>Message: <textarea name="message"></textarea></label>
-          </p>
-          <p>
-            <button type="submit">Send</button>
-          </p>
+          <p style={{
+              marginBottom: rhythm(0.5),
+            }}>Leave a comment:</p>
+          <div>
+            <TextField label="Name" InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <AccountCircle />
+            </InputAdornment>
+          ),
+        }} />
+          </div>
+          <div>
+            <TextField label="Email" input="email" />
+          {/* </div>
+          <div> */}
+            <TextField label="Message" fullWidth multiline />
+          </div>
+          <div  style={{
+              marginTop: rhythm(.5),
+            }}>
+            <Button variant="outlined" type="submit" color="primary">Send</Button>
+          </div>
         </form>
+        <hr style={{
+              marginTop: rhythm(1.5),
+            }} />
+        <Bio />
 
         <ul
           style={{
