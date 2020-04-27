@@ -19,9 +19,6 @@ class BlogPostTemplate extends React.Component {
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
     const image = post.frontmatter.socialPic? post.frontmatter.socialPic.childImageSharp.sizes.src : null
-    const inputProps = {
-      name: "emailTextBox",
-    };
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
@@ -54,10 +51,10 @@ class BlogPostTemplate extends React.Component {
             <TextField label="Name" name="Name" style={{
           marginRight: rhythm(0.5),
         }} />
-            <TextField label="Email" input="email" inputMode="email" inputProps={inputProps} name="Email" />
+            <TextField label="Email" input="email" inputMode="email" name="Email" />
           </div>
           <div>
-            <TextField label="Message" fullWidth multiline />
+            <TextField label="Message" name="Message" fullWidth multiline />
           </div>
           <div  style={{
               marginTop: rhythm(1.0),
