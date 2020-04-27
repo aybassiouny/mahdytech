@@ -7,9 +7,7 @@ import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography";
 
 import customChart from '../components/custom-chart';
-import { Input, Button, InputLabel, TextareaAutosize, TextField } from '@material-ui/core';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import { Button, TextField } from '@material-ui/core';
 
 class BlogPostTemplate extends React.Component {
   componentDidMount() {
@@ -21,6 +19,9 @@ class BlogPostTemplate extends React.Component {
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
     const image = post.frontmatter.socialPic? post.frontmatter.socialPic.childImageSharp.sizes.src : null
+    const inputProps = {
+      name: "emailTextBox",
+    };
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
@@ -50,22 +51,16 @@ class BlogPostTemplate extends React.Component {
               marginBottom: rhythm(0.5),
             }}>Leave a comment:</p>
           <div>
-            <TextField label="Name" InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <AccountCircle />
-            </InputAdornment>
-          ),
+            <TextField label="Name" name="Name" style={{
+          marginRight: rhythm(0.5),
         }} />
+            <TextField label="Email" input="email" inputMode="email" inputProps={inputProps} name="Email" />
           </div>
           <div>
-            <TextField label="Email" input="email" />
-          {/* </div>
-          <div> */}
             <TextField label="Message" fullWidth multiline />
           </div>
           <div  style={{
-              marginTop: rhythm(.5),
+              marginTop: rhythm(1.0),
             }}>
             <Button variant="outlined" type="submit" color="primary">Send</Button>
           </div>
