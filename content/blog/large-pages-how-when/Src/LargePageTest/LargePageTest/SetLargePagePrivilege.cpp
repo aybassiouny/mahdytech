@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <iostream>
 
+namespace
+{
 BOOL SetPrivilege(
     HANDLE hToken,          // access token handle
     LPCTSTR lpszPrivilege,  // name of privilege to enable/disable
@@ -50,9 +52,9 @@ BOOL SetPrivilege(
 
     return TRUE;
 }
+}
 
-
-void SetLargePagePrivilege()
+void LargePageTest::SetLargePagePrivilege()
 {
     HANDLE hToken;
     auto res = OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken);

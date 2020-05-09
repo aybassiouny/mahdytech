@@ -1,11 +1,13 @@
 #define NOMINMAX
 
+#include "SetLargePagePrivilege.h"
 #include <iostream>
 #include <windows.h>
 #include <algorithm>
 #include <random>
 #include <functional>
-#include <thread>
+#include <string>
+#include <chrono>
 
 std::string GetErrorAsString(DWORD errorMessageID)
 {
@@ -28,13 +30,13 @@ auto GetNormalPageMinimum()
     return sysInfo.dwPageSize;
 }
 
-std::size_t Allocate(SIZE_T pageSize, DWORD allocationType, char* largeBuffer)
+std::size_t Allocate(SIZE_T pageSize, DWORD allocationType, char** largeBuffer, std::uint8_t numGBs)
 {
     std::size_t gb = 1024ull * 1024 * 1024;
-    std::size_t  N_PAGES_TO_ALLOC = 1 * gb / pageSize;
+    std::size_t  N_PAGES_TO_ALLOC = numGBs * gb / pageSize;
     std::size_t buffersize = pageSize * N_PAGES_TO_ALLOC;
     std::cout << "Allocating " << buffersize << " bytes" << std::endl;
-    largeBuffer = reinterpret_cast<char*>(VirtualAlloc(NULL, buffersize, allocationType, PAGE_READWRITE));
+    *largeBuffer = reinterpret_cast<char*>(VirtualAlloc(NULL, buffersize, allocationType, PAGE_READWRITE));
     if (!largeBuffer)
     {
         std::cout << "VirtualAlloc failed, error: " << GetErrorAsString(GetLastError());
@@ -54,8 +56,7 @@ auto GetRandomPair(std::uint64_t min, std::uint64_t max)
 
 void GenerateRandomMemoryAccesses(char* largeBuffer, std::size_t bufferSize)
 {
-    std::cout << "Generating random numbers ...";
-    auto [valRng, valDistribution] = GetRandomPair(std::numeric_limits<std::uint8_t>::min(), std::numeric_limits<std::uint8_t>::max());
+    std::cout << "Generating random numbers ..." << std::endl;
     auto [indexRng, indexDistribution] = GetRandomPair(0ull, bufferSize - 1);
 
     std::size_t numChanges = 0;
@@ -63,8 +64,7 @@ void GenerateRandomMemoryAccesses(char* largeBuffer, std::size_t bufferSize)
     while (true)
     {
         auto index = indexDistribution(indexRng);
-        auto val = valDistribution(valRng);
-        largeBuffer[index] = val;
+        largeBuffer[index] = 100;
         ++numChanges;
         auto timeDif = std::chrono::high_resolution_clock::now() - curTime;
         if (timeDif > std::chrono::seconds(1))
@@ -79,13 +79,14 @@ void GenerateRandomMemoryAccesses(char* largeBuffer, std::size_t bufferSize)
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
+    if (argc != 3)
     {
-        std::cout << "Usage: LargePageTest [Enable/Disable]";
+        std::cout << "Usage: LargePageTest [Enable/Disable] [Alloc size in GBs]";
         return -1;
     }
 
-    bool disableLargePage = argv[1] == "Disable";
+    bool disableLargePage = strcmp(argv[1], "Disable") == 0;
+    auto numGBs = std::stoi(argv[2]);
 
     DWORD allocationType{};
     SIZE_T pageSize{};
@@ -93,6 +94,8 @@ int main(int argc, char* argv[])
     {
         pageSize = GetLargePageMinimum();
         std::cout << "Large page minimum: " << pageSize << std::endl;
+
+        LargePageTest::SetLargePagePrivilege();
 
         std::cout << "Allocating using Large Pages, page size: " << pageSize << std::endl;
         allocationType = MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES;
@@ -106,7 +109,7 @@ int main(int argc, char* argv[])
     }
 
     char* largeBuffer = nullptr;
-    auto bufferSize = Allocate(pageSize, allocationType, largeBuffer);
+    auto bufferSize = Allocate(pageSize, allocationType, &largeBuffer, static_cast<std::uint8_t>(numGBs));
     if (bufferSize == 0)
     {
         return -1;

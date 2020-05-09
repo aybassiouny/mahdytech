@@ -1,3 +1,6 @@
 #pragma once
 
-void SetLargePagePrivilege();
+namespace LargePageTest
+{
+	void SetLargePagePrivilege();
+}
