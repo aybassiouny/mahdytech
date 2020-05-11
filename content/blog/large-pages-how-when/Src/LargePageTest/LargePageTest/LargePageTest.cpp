@@ -8,6 +8,7 @@
 #include <functional>
 #include <string>
 #include <chrono>
+#include <thread>
 
 std::string GetErrorAsString(DWORD errorMessageID)
 {
@@ -54,27 +55,36 @@ auto GetRandomPair(std::uint64_t min, std::uint64_t max)
     return std::make_pair(rng, distribution);
 }
 
+volatile std::size_t numChanges = 0;
+void GenerateReport()
+{
+    auto lastTime = std::chrono::high_resolution_clock::now();
+    auto lastChanges = 0;
+    while (true)
+    {
+        auto timeDif = std::chrono::high_resolution_clock::now() - lastTime;
+        auto curChanges = numChanges;
+        auto thousandChangesPerSecond = (curChanges - lastChanges) / (1000.0f * std::chrono::duration_cast<std::chrono::milliseconds>(timeDif).count());
+        std::cout << "ThousandChangesPerSecond: " << thousandChangesPerSecond << std::endl;
+        lastTime = std::chrono::high_resolution_clock::now();
+        lastChanges = curChanges;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+}
+
 void GenerateRandomMemoryAccesses(char* largeBuffer, std::size_t bufferSize)
 {
     std::cout << "Generating random numbers ..." << std::endl;
     auto [indexRng, indexDistribution] = GetRandomPair(0ull, bufferSize - 1);
 
-    std::size_t numChanges = 0;
-    auto curTime = std::chrono::high_resolution_clock::now();
+    std::thread th(GenerateReport);
     while (true)
     {
         auto index = indexDistribution(indexRng);
         largeBuffer[index] = 100;
         ++numChanges;
-        auto timeDif = std::chrono::high_resolution_clock::now() - curTime;
-        if (timeDif > std::chrono::seconds(1))
-        {
-            auto thousandChangesPerSecond = numChanges / (1000.0f * std::chrono::duration_cast<std::chrono::milliseconds>(timeDif).count());
-            std::cout << "ThousandChangesPerSecond: " << thousandChangesPerSecond << std::endl;
-            numChanges = 0;
-            curTime = std::chrono::high_resolution_clock::now();
-        }
     }
+    th.join();
 }
 
 int main(int argc, char* argv[])
