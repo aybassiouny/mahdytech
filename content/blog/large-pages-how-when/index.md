@@ -6,6 +6,40 @@ seotitle: Profiling Processor Cache Misses with VTune
 socialPic: column_major.PNG
 ---
 
+The Fantastic Large-Pages and How to Define Them
+
+- Intro: 
+  - learnt about it from someone introducing it to code base
+  - recently I tried to apply it but it didn't give me the effects I needed, I thought I would dig deeper
+- What are they?
+  - What is a Page
+  - What is a Large-Page
+  - Why are Large-Pages Interesting
+  - Bonus: Huge Pages
+-  The How
+   -  Requirements: SeLockMemoryPrivilege 
+      -  Why do we need to lock? 
+      -  blog by Old New Thing
+   -  First, add the privilege
+      -  On a server? Probably run this code automatically
+      -  Need to be done once
+   -  Acquire Privlege before use
+      -  Needs to be done by admin as well
+   -  Finally, use the `MEM_LARGE_PAGES` flag during allocation
+   -  You cannot see it as a working set - but it's allocated! use commit size or vmmap to see it 
+-  Give me the numbers
+   -  Experiment: How many memory access per second
+      -  Run over the setup
+         -  Note on how decreasing what's done in this thread (making the program meomory bound) increased speed of large pages by a lot, but normal-pages by not so much
+      -  Video
+      -  Graph for increasing memory size vs speed (if interesting)
+      -  VTune: emphasis on memory accesses
+-  Last notes: 
+   -  When to use it: 
+      -  Big allocations, especially ones that we'd access frequently
+      -  downside: it's non-pageable, so you gotta know well-ahead of time that you can affodd that much allocation in physical memory 
+   -  What happened in my case, is that it turned out that chunk of memory was already allocated as a LargePage, passed in by someone else. 
+
 Large Pages
 
 - What's a page: 

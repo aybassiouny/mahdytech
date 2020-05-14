@@ -25,7 +25,7 @@ std::string GetErrorAsString(DWORD errorMessageID)
     return message;
 }
 
-#define TARGET_SYSTEM_NAME L"DESKTOP-AVV4L7N"
+#define TARGET_SYSTEM_NAME L"DESKTOP-J3TTSAD"
 //#define STATUS_SUCCESS 0
 LSA_HANDLE GetPolicyHandle()
 {
@@ -179,7 +179,7 @@ int main()
     There is probably a Win32 way, but that seems easier
     */
 
-    LPCSTR strSid = "S-1-5-21-2554383953-2022197192-2242278139-1001";
+    LPCSTR strSid = "S-1-5-21-1169946419-2737151734-878301561-1001";
     PSID sid;
     ConvertStringSidToSidA(strSid, &sid);
     AddPrivileges(sid, GetPolicyHandle());
