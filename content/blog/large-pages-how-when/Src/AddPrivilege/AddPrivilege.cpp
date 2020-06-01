@@ -178,7 +178,8 @@ int main()
         $strSID.Value
     There is probably a Win32 way, but that seems easier
     */
-
+    int x = 5;
+    std::cout << &x << std::endl;
     LPCSTR strSid = "S-1-5-21-1169946419-2737151734-878301561-1001";
     PSID sid;
     ConvertStringSidToSidA(strSid, &sid);
