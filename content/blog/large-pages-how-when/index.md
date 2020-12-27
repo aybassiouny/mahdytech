@@ -1,6 +1,6 @@
 ---
-title: "The Fantastic Large-Pages and How to Utilize Them"
-date: "2020-05-13T12:00:32.169Z"
+title: "Large-Pages in Windows: The Why & the How"
+date: "2020-07-11T12:00:32.169Z"
 description: Large-Pages
 seotitle: Large-Pages
 socialPic: Rammap.PNG
@@ -13,7 +13,8 @@ Through the years, I have stumbled onto the concept "Large-Pages" several times 
 To start things off, what is a page? According to [Wikipedia](https://en.wikipedia.org/wiki/Page_(computer_memory)): 
 
 ```
-[A page]  is the smallest unit of data for memory management in a virtual memory operating system.
+[A page]  is the smallest unit of data for memory management in
+a virtual memory operating system.
 ```
 
 The way I like to think about it, a page of chunk of contiguous memory, a big array. The kernel memory manager uses the page as its smallest unit to manage. 
@@ -70,36 +71,26 @@ VirtualAlloc(NULL, buffersize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES, PAGE_
 
 Note that memory allocated will be commited as well, it is not possible to just reserve a [large-page allocation](https://docs.microsoft.com/en-us/windows/win32/memory/large-page-support). 
 
-One last note, after such memory is allocated, it's not possible to see it in Task Manager's "Working Set", and is rather viewable from "Commit Size" tab: 
+One last note, after such memory is allocated, it's not possible to see it in Task Manager's "Memory/Working Set", and is rather viewable from "Commit Size" tab: 
 
 ![Task Manager](./task_manager.png)
 
+## Give me the numbers 
 
+I ran a simple experiment to see if large pages are really worth the time. I tried to simulate a memory-bound piece of code that accesses a large chunk of memory randomly. I then measured how many accesses can be done per second, when allocating the large chunk normally, vs as a large page.  
 
--  The How
-   -  Requirements: SeLockMemoryPrivilege 👍
-      -  Why do we need to lock? 👍
-      -  blog by Old New Thing 👍
-   -  First, add the privilege 👍
-      -  On a server? Probably run this code automatically 👍
-      -  Need to be done once 👍 
-   -  Acquire Privlege before use 👍
-      -  Needs to be done by admin as well 👍
-   -  Finally, use the `MEM_LARGE_PAGES` flag during allocation
-   -  You cannot see it as a working set - but it's allocated! use commit size or vmmap to see it 
--  Give me the numbers
-   -  Experiment: How many memory access per second
-      -  Run over the setup
-         -  Note on how decreasing what's done in this thread (making the program meomory bound) increased speed of large pages by a lot, but normal-pages by not so much
-      -  Video
-      -  Graph for increasing memory size vs speed (if interesting)
-      -  VTune: emphasis on memory accesses
--  Last notes: 
-   -  When to use it: 
-      -  Big allocations, especially ones that we'd access frequently
-      -  downside: it's non-pageable, so you gotta know well-ahead of time that you can affodd that much allocation in physical memory 
-   -  What happened in my case, is that it turned out that chunk of memory was already allocated as a LargePage, passed in by someone else. 
+![Compare ](./comparison.gif)
+Left: Large-page enabled, right: disabled
 
+Large page memory access are far ahead! Not really a surprise, but it's nice to see in action. Code is hosted on [github [ADD LINK]]()
+
+## Last notes
+
+Large Pages are especially important if you have a large chunk of memory to allocate, and access frequently. Its major downside: it's hard to allocate, and once allocated, it "sits" there in the physical memory, even if the process doing the allocating is idle, as large-page memory is non-pageable.
+
+So why didn't they give me the gains I expected in the beginning of the blog? Well, turns out that this chunk was *already* getting allocated as a large-page, something I missed due to a mess of who's-allocating-what. The thing about large-pages - they are not very visible.
+
+<!-- 
 Large Pages
 
 - What's a page: 
@@ -129,11 +120,6 @@ Large Pages
   - non-pageable! [Ramyond Chen](https://devblogs.microsoft.com/oldnewthing/20110128-00/?p=11643) goes into detail of why Windows didn't bother supporting this, 
   
 
-* How to : 
-
-
-
-
 experiment: 
 - Create 10 GB of memory garbage, see how many random lookups/sec can be done
 - Same with Large page, compare random lookups/sec
@@ -148,3 +134,16 @@ Outline:
   - What is a Large-Page
   - Why are Large-Pages Interesting
   - Bonus: Huge Pages
+-  The How
+   -  Requirements: SeLockMemoryPrivilege 👍
+      -  Why do we need to lock? 👍
+      -  blog by Old New Thing 👍
+   -  First, add the privilege 👍
+      -  On a server? Probably run this code automatically 👍
+      -  Need to be done once 👍 
+   -  Acquire Privlege before use 👍
+      -  Needs to be done by admin as well 👍
+   -  Finally, use the `MEM_LARGE_PAGES` flag during allocation 👍
+   -  You cannot see it as a working set - but it's allocated! use commit size or vmmap to see it 👍
+
+ -->
