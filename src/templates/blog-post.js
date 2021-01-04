@@ -17,7 +17,7 @@ class BlogPostTemplate extends React.Component {
     const post = this.props.data.markdownRemark
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
-    const image = post.frontmatter.socialPic? post.frontmatter.socialPic.childImageSharp.sizes.src : null
+    const image = post.frontmatter.featuredImage? post.frontmatter.featuredImage.childImageSharp.fluid : null
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
@@ -93,14 +93,12 @@ export const pageQuery = graphql`
         date(formatString: "MMMM DD, YYYY")
         description
         seotitle
-        socialPic {
+        featuredImage {
           childImageSharp {
-            sizes(maxWidth: 400) {
-              ...GatsbyImageSharpSizes_tracedSVG
+            fluid(maxWidth: 630) {
+              ...GatsbyImageSharpFluid
             }
           }
-          extension
-          publicURL
         }
       }
     }
