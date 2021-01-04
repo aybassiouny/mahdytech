@@ -3,7 +3,6 @@ title: Profiling Processor Cache Misses with VTune
 date: "2019-08-06T12:00:32.169Z"
 description: VTune is an instruction level profiler. I want to explore if it can detect cache unfriendliness, and fix it.
 seotitle: Profiling Processor Cache Misses with VTune
-socialPic: column_major.PNG
 featuredImage: column_major.PNG
 ---
 
