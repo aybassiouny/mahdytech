@@ -2,6 +2,7 @@
 title: "Not all Async is Created Equal: How Using Async Correctly Increased Throughput by 4X"
 date: "2019-02-22T12:00:32.169Z"
 description: Cooperatively-scheduling our threads to yield on IO blocks allow us to process much more requests per second, with no reprimands for latency.
+featuredImage: AddingIO.png
 ---
 
 > "Everybody who learns concurrency thinks they understand it, ends up finding mysterious races they thought weren’t possible, and discovers that they didn’t actually understand it yet after all." - Herb Sutter
@@ -10,16 +11,16 @@ I was recently bitten by the pain of getting async wrong - or rather, thinking I
 
 Contents:
 
-- [Lay of the Land](#LayOfLand)
-  - [Setting Number of Threads in Processing Thread Pool to a Constant](#ConstantThreads)
-    - [TLS and Cold Start](#TLS)
-    - [Reasoning about App Logic](#AppLogic)
-- [First Try: Blocking Async](#FirstTry)
-  - [Wait, What Just Happened](#WhatHappened)
-- [What it Takes to be *Actually* Async](#WhatItTakes)
-  - [Everything is a Callback](#ErythingIsACallback)
-  - [Context Needs to be Carried Around](#Context)
-- [Conclusion](#Conclusion)
+- [Lay of the Land](#lay-of-the-land)
+  - [Setting Number of Threads in Processing Thread Pool to a Constant](#setting-number-of-threads-in-processing-thread-pool-to-a-constant)
+    - [1. TLS and cold start {#TLS}](#1-tls-and-cold-start-tls)
+    - [2. Reasoning about App Logic](#2-reasoning-about-app-logic)
+- [First Try: Blocking Async](#first-try-blocking-async)
+  - [Wait, What Just Happened](#wait-what-just-happened)
+- [What it Takes to be *Actually* Async](#what-it-takes-to-be-actually-async)
+  - [1. Everything is a Callback](#1-everything-is-a-callback)
+  - [2. Context Needs to be Carried Around](#2-context-needs-to-be-carried-around)
+- [Conclusion](#conclusion)
 
 ## Lay of the Land
 

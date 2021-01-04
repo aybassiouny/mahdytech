@@ -87,9 +87,7 @@ function SEO({ description, lang, meta, keywords, title, socialPic=null }) {
             : []
         )
         .concat(meta)}
-    >
-      <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
-    </Helmet>
+    />
   )
 }
 
