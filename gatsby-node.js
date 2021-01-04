@@ -20,15 +20,6 @@ exports.createPages = ({ graphql, actions }) => {
               frontmatter {
                 title
                 seotitle
-                socialPic {
-                  childImageSharp {
-                    sizes(maxWidth: 400) {
-                      src
-                      srcSet
-                      sizes
-                    }
-                  }
-                }
               }
             }
           }
@@ -74,3 +65,25 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
   }
 }
+
+
+// exports.createSchemaCustomization = ({ actions }) => {
+//   const { createTypes } = actions
+//   const typeDefs = `
+//   type markdownRemark implements Node {
+//       // Use custom frontmatter type
+//       frontmatter: Frontmatter
+//     }
+//     // Define custom frontmatter type
+//     type FrontMatter {
+//       // Nullable array of Feature elements
+//       featuredImage: [Feature]
+//     }
+//     // Feature has nullable fields title and description
+//     type Feature {
+//         title: String
+//         description: String
+//     }
+//   `
+//   createTypes(typeDefs)
+// }

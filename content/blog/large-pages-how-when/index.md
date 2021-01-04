@@ -1,27 +1,28 @@
 ﻿---
 title: "Large-Pages in Windows: The What, the Why & the How"
 date: "2020-12-27T12:00:32.169Z"
-description: Large-Pages
-seotitle: Large-Pages
+description: It hit me that I don’t know what Large Pages really are, and I needed deeper info - which I am going through in this post.
+seotitle: Large Pages memory accesses Page Table lookups Translation Looksaside Buffer
 socialPic: Rammap.PNG
+featuredImage: Rammap.PNG
 ---
 
 I stumbled across the concept of "Large-Pages" several times, mainly through mentions in our codebase, but I never went much further than exploring the wikipedia page. I knew they can make memory lookups faster, but that's about it. 
 
-Recently, I had a service that was not doing any disk lookups, and bottlenecked on a bunch of memory accesses that were done for each request. I thought to myself; "Easy! I will use large pages and my service will run faster". It didn't. It hit me that I don't know what Large Pages really are, and I needed deeper info - which I am summarizing in this post.
+Recently, I had a service that was not doing any disk lookups, and bottlenecked on a bunch of memory accesses that were done for each request. I thought to myself; "Easy! I will use large pages and my service will run faster". It didn't. It hit me that I don't know what Large Pages really are, and I needed deeper info - which I am going through in this post.
 
 - [The What](#the-what)
-  - [The Why](#the-why)
-    - [The whynot](#the-whynot)
-    - [Bonus: Huge Pages](#bonus-huge-pages)
-  - [The How](#the-how)
-    - [1. Add User Privilege `SeLockMemoryPrivilege`](#1-add-user-privilege-selockmemoryprivilege)
-    - [2. Turn `SeLockMemoryPrivilege` on before use](#2-turn-selockmemoryprivilege-on-before-use)
-    - [3. Use it](#3-use-it)
-  - [Give me the numbers](#give-me-the-numbers)
-  - [Last notes](#last-notes)
+- [The Why](#the-why)
+  - [The whynot](#the-whynot)
+  - [Bonus: Huge Pages](#bonus-huge-pages)
+- [The How](#the-how)
+  - [1. Add User Privilege `SeLockMemoryPrivilege`](#1-add-user-privilege-selockmemoryprivilege)
+  - [2. Turn `SeLockMemoryPrivilege` on before use](#2-turn-selockmemoryprivilege-on-before-use)
+  - [3. Use it](#3-use-it)
+- [Give me the numbers](#give-me-the-numbers)
+- [Last notes](#last-notes)
 
-# The What
+## The What
 
 To start things off, what is a page? According to [Wikipedia](https://en.wikipedia.org/wiki/Page_(computer_memory)): 
 

@@ -2,6 +2,7 @@
 title: Wielding Debug Builds against Heap Corruption
 date: "2019-02-10T12:00:32.169Z"
 description: Heap corruptions can be nasty to investigate. I rebuilt in debug & voila! The app was throwing exactly where the problem was happening.
+featuredImage: AppVerify1.png
 ---
 
 [Heap corruptions](https://en.wikipedia.org/wiki/Memory_corruption) can be nasty to investigate. I recently had to investigate a bug that manifests under special circumstances in production. Crashes had all flavors of stack traces - the trademark of heap corruption. To debug it, I ran the usually recommended tool for heap corruption: PageHeap.

@@ -2,6 +2,7 @@
 title: What happens when you press "X"
 date: "2018-12-30T12:00:32.169Z"
 description: I used to think shutdowns are easy. Unfortunately that’s not completely the case. Ungraceful shutdowns bring about crashes, or unpredicted change to state.
+featuredImage: Presentation1.png
 ---
 
 #### or *Why it is hard to get Graceful Shutdowns right*
@@ -12,7 +13,7 @@ I used to think shutdowns are easy. You're shutting down and the OS is going to 
 
 *tl;dr*: globals and TLS objects can make graceful shutdown a nightmare
 
-- [Pressing "X" sends a signal](#pressing-%22x%22-sends-a-signal)
+- [Pressing "X" sends a signal](#pressing-x-sends-a-signal)
   - [Different Exit Signals in Windows](#different-exit-signals-in-windows)
   - [Using a Ctrl handler](#using-a-ctrl-handler)
 - [Threads & Global Objects make things tough](#threads--global-objects-make-things-tough)

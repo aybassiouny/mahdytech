@@ -1,10 +1,11 @@
 ---
-title: How to Write Fast Services in C++
+title: Elements of Fast Services with C++
 date: "2018-12-23T12:00:32.169Z"
 description: I used to think shutdowns are easy. Unfortunately that’s not completely the case. Ungraceful shutdowns bring about crashes, or unpredicted change to state.
+featuredImage: Media.png
 ---
 
-> "Computers are really fast" said my friend to me a while ago, as I was trying to figure out how to optimize the hottest path in my service. "It is almost always the memory" he added. It's been 3 years since, and I have learnt a bit more about computers, but I still clearly recall his saying as the root cause for too many problems.
+> "Computers are really fast" said my friend to me a while ago, as I was trying to figure out how to optimize the hottest path in my service. "It is almost always the IO" he added. It's been 3 years since, and I have learnt a bit more about computers, but I still clearly recall his saying as the root cause for too many problems.
 
 Writing fast C++ services is a mix of following the right patterns, while, obviously enough, evading the wrong patterns. I would like to focus in this post on memory-related topics, for the reason my good friend mentions above.
 
@@ -14,7 +15,7 @@ Writing fast C++ services is a mix of following the right patterns, while, obvio
   - [Arena Allocators](#arena-allocators)
   - [Object Pools](#object-pools)
 - [The Right Data Structures](#the-right-data-structures)
-  - [`std::vector` is king](#stdvector-is-king)
+  - [`std::vector` is king](#stdvectoris-king)
     - [A word of caution:](#a-word-of-caution)
   - [Don't be afraid of hybrid data structures](#dont-be-afraid-of-hybrid-data-structures)
 - [The Wrong Practices](#the-wrong-practices)

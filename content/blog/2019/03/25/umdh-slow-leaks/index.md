@@ -2,6 +2,7 @@
 title: "UMDH: Catching Slow Leaks Red-Handed"
 date: "2019-03-25T12:00:32.169Z"
 description: UMDH is a tightly stripped version of XPerf's extended leaks debugging capabilities. While not nearly as powerful, in several scenarios it is good enough.
+featuredImage: compare.PNG
 ---
 
 > This language is lacking  
@@ -16,9 +17,9 @@ It is good to have an approximate idea how much memory an app is expected to use
 - [Backdrop](#backdrop)
 - [Sure XPerf's Got it](#sure-xperfs-got-it)
 - ["User Memory Heap Dump" (UMDH) For the Rescue](#user-memory-heap-dump-umdh-for-the-rescue)
-  - [So, What's UMDH](#so-whats-umdh)
-  - [How to Run it](#how-to-run-it)
-  - [Interpreting UMDH Output](#interpreting-umdh-output)
+	- [So, What's UMDH](#so-whats-umdh)
+	- [How to Run it](#how-to-run-it)
+	- [Interpreting UMDH Output](#interpreting-umdh-output)
 - [What happened next](#what-happened-next)
 - [Conclusion](#conclusion)
 

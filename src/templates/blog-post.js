@@ -17,7 +17,7 @@ class BlogPostTemplate extends React.Component {
     const post = this.props.data.markdownRemark
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
-    const image = post.frontmatter.socialPic? post.frontmatter.socialPic.childImageSharp.sizes.src : null
+    // const image = post.frontmatter.socialPic? post.frontmatter.socialPic.childImageSharp.sizes.src : null
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
