@@ -1,6 +1,3 @@
-// LargePageTes.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <ntstatus.h>
 #include <windows.h>
@@ -25,12 +22,9 @@ std::string GetErrorAsString(DWORD errorMessageID)
     return message;
 }
 
-#define TARGET_SYSTEM_NAME L"DESKTOP-J3TTSAD"
-//#define STATUS_SUCCESS 0
-LSA_HANDLE GetPolicyHandle()
+LSA_HANDLE GetPolicyHandle(WCHAR* SystemName)
 {
     LSA_OBJECT_ATTRIBUTES ObjectAttributes;
-    WCHAR SystemName[] = TARGET_SYSTEM_NAME;
     USHORT SystemNameLength;
     LSA_UNICODE_STRING lusSystemName;
     NTSTATUS ntsResult;
@@ -176,12 +170,12 @@ int main()
         $objUser = New-Object System.Security.Principal.NTAccount("AHMED")
         $strSID = $objUser.Translate([System.Security.Principal.SecurityIdentifier])
         $strSID.Value
-    There is probably a Win32 way, but that seems easier
+    There is probably a way through Win32 API, but that seems easier
     */
-    int x = 5;
-    std::cout << &x << std::endl;
-    LPCSTR strSid = "S-1-5-21-1169946419-2737151734-878301561-1001";
+    LPCSTR strSid = "S-1-5-21-1169947419-2731231734-878301561-1001";
     PSID sid;
+    WCHAR SystemName[] = L"DESKTOP-J3TTSAD";
+
     ConvertStringSidToSidA(strSid, &sid);
-    AddPrivileges(sid, GetPolicyHandle());
+    AddPrivileges(sid, GetPolicyHandle(SystemName));
 }

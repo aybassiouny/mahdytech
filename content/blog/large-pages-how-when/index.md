@@ -3,8 +3,8 @@ title: "Large-Pages in Windows: The What, the Why & the How"
 date: "2020-12-27T12:00:32.169Z"
 description: It hit me that I don’t know what Large Pages really are, and I needed deeper info - which I am going through in this post.
 seotitle: Large Pages memory accesses Page Table lookups Translation Looksaside Buffer
-socialPic: Rammap.PNG
-featuredImage: Rammap.PNG
+socialPic: LargePage.PNG
+featuredImage: LargePage.PNG
 ---
 
 I stumbled across the concept of "Large-Pages" several times, mainly through mentions in our codebase, but I never went much further than exploring the wikipedia page. I knew they can make memory lookups faster, but that's about it. 
@@ -32,9 +32,11 @@ A page is a chunk of contiguous memory, a big array. The kernel memory manager u
 
 A page is of a fixed size. In Windows, that's usually about 4 KB. A `Large-Page` is, as the name suggests, of bigger size, usually 2 MB. 
 
+![LargePage](LargePage.svg "Large Pages")
+
 ## The Why
 
-So why is it better or faster? To understand that, one needs to first understand how address translation happens. 
+So why is it better or faster? To understand that, we first need to look into how address translation happens. 
 
 Assume our application has a pointer that holds `0x00000085C92FFBE4` and we try dereference that location, the kernel needs translate this virtual address to a physical one in RAM (if possible). In order to do this there are two familiar ways:
 
@@ -43,19 +45,24 @@ Assume our application has a pointer that holds `0x00000085C92FFBE4` and we try 
 
 Large Pages are much more cache friendly than normal sized pages. There are fewer of them, and take a fewer number of entries to cover much more address space. This leads to a much higher probability of having their entries availailable in TLB, and in turn, faster memory accesses.
 
-<Graphic demonstrating this> 
+
+![TLB](TLB.svg "TLB")
+If TLB only had 5 entries, using Normal pages can only cover 5 pages (20 KB), while using Large Pages can cover up to 2560 pages (10 MB), giving a mugh higher probability for a cahce hit on a given memory access.
+ 
 
 ### The whynot
 
 Large pages sound great - but why not have all allocations in large pages? They have pointy downsides: 
 - Large pages are more prone to fragmentation, as they require contiguous free RAM, which might be hard to find after PC has been up for a while. 
-- Large pages are harder to allocate, as they have strict requirements for allowed page range. For example, A large page has to be located in the ranges (0-511, 512-1024, etc), but cannot occupy the pages 1-513, limiting our options even futher.
+- Large pages are harder to allocate, as they have strict requirements for allowed page range. For example, a large page can occupy the page ranges 0-511, or 512-1024, etc, but cannot occupy the pages 1-513, even if they are free, limiting our options even futher.
 
-Allocations for large pages fail **more often than normal allocations** - and code should be written to accomodate that; e.g. performance sensitive applications that require large pages might prefer to fail the node completely if that one allocation fails, until node managers restarts the machine. 
+Allocations for large pages fail **more often than normal allocations** - and code should be written to accomodate that; e.g. performance sensitive services that require large pages might prefer to fail the node completely if that one allocation fails, until node managers restarts the machine. 
 
 ### Bonus: Huge Pages
 
-The Kernel allows allocating Huge Pages (that are about 1GB), however there is no special config for it. The OS will automatically use one Huge Page if allocation size is big enough, and other conditions are satisified - as we'll discuss in a bit. A bigger page size allows for even less TLB entries and an almost guaranteed cache hit. When it comes to pages, size matters.
+![Bigger Fish](biggerFish.jpeg)
+
+It is possible to allocate even bigger pages - called Huge Pages, that are about 1GB. However, there is no special config for it. The memory manager will automatically use a Huge Page if allocation size is big enough, and pending memory availability with the same restrictions as [above](#the-whynot). A bigger page size allows for even less TLB entries and an even more guaranteed cache hit.
 
 ## The How
 
@@ -63,9 +70,9 @@ I didn't find it straightforward to setup Large-Pages, especially on my Windows 
 
 ### 1. Add User Privilege `SeLockMemoryPrivilege` 
 
-Large-Pages [cannot be paged out](https://devblogs.microsoft.com/oldnewthing/20110128-00/?p=11643)! In other words, they always stay in RAM. Hence, the user allocating large pages needs to be have the privilege `SeLockMemoryPrivilege` set. Note that even an admin account might not have that privilege. Good news is, this is a one time thing that sticks across reboots. 
+Large-Pages [cannot be paged out](https://devblogs.microsoft.com/oldnewthing/20110128-00/?p=11643)! In other words, they always stay in RAM. Hence, the user allocating large pages needs to be have the privilege [SeLockMemoryPrivilege](https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/lock-pages-in-memory) set. Note that even an admin account might not have that privilege. Good news is, this is a one time thing that sticks across reboots. 
 
-One way to give yourself that privilege is through Group Policy (for Home users like me, it needs to be [turned on first](https://superuser.com/a/1229992)). However, I did it the hard way just for kicks: 
+One way to give yourself that privilege is through Group Policy (for Home users like me, it needs to be [turned on first](https://superuser.com/a/1229992)), but it's also doable through a mix of Powershell/Win32 API:
 
 1. Get your windows SID by running on powershell: 
 ```
