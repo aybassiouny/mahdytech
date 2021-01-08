@@ -2,5 +2,5 @@
 
 namespace LargePageTest
 {
-	void SetLargePagePrivilege();
+	bool SetLargePagePrivilege();
 }

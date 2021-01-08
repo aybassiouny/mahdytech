@@ -53,6 +53,7 @@ module.exports = {
             resolve: `gatsby-remark-prismjs`,
             options: {
               classPrefix: "language-",
+              showLineNumbers: true,
             },
           },
           `gatsby-remark-copy-linked-files`,

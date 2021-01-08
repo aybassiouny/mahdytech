@@ -75,28 +75,31 @@ Large-Pages [cannot be paged out](https://devblogs.microsoft.com/oldnewthing/201
 One way to give yourself that privilege is through Group Policy (for Home users like me, it needs to be [turned on first](https://superuser.com/a/1229992)), but it's also doable through a mix of Powershell/Win32 API:
 
 1. Get your windows SID by running on powershell: 
-```
+
+```powershell
 $objUser = New-Object System.Security.Principal.NTAccount("AHMED")
 $strSID = $objUser.Translate([System.Security.Principal.SecurityIdentifier])
 $strSID.Value
 ```
-2. Call `ConvertStringSidToSidA` to convert that to PSID that Win32 API regonizes
-3. Call `AddPrivileges(sid, GetPolicyHandle());`, where [GetPolicyHandle](https://docs.microsoft.com/en-us/windows/win32/secmgmt/opening-a-policy-object-handle) and [AddPrivileges](https://docs.microsoft.com/en-us/windows/win32/secmgmt/managing-account-permissions) functions are provided by the docs
 
-Code is hosted on [github](https://github.com/aybassiouny/mahdytech/pull/14/files#diff-20e3333f5c404fc51fd0d69474f6dd96fd27f55248a2edde2f6e2e43134c9618)
+2. Call `ConvertStringSidToSidA` to convert that to PSID that Win32 API regonizes
+3. Call `AddPrivileges(sid, GetPolicyHandle());`, where [GetPolicyHandle](https://docs.microsoft.com/en-us/windows/win32/secmgmt/opening-a-policy-object-handle) and [AddPrivileges](https://docs.microsoft.com/en-us/windows/win32/secmgmt/managing-account-permissions) functions are provided by the docs.
+
+Check [AddPrivilege.cpp](https://github.com/aybassiouny/mahdytech/blob/master/content/blog/large-pages-how-when/Src/AddPrivilege/AddPrivilege.cpp) for an example.
 
 ### 2. Turn `SeLockMemoryPrivilege` on before use
 
 While acquiring the privilege is a once-per-user action, every process that needs to allocate large pages need to turn on the privilege first, by calling `AdjustTokenPrivileges`. This needs to be done by an admin account, however the allocation itself does not require admin privileges. 
 
-[Github Snippet]()
+Check [SetLargePagePrivilege.cpp](https://github.com/aybassiouny/mahdytech/blob/master/content/blog/large-pages-how-when/Src/LargePageTest/LargePageTest/SetLargePagePrivilege.cpp) for an example.
 
 ### 3. Use it
 
 A call to `VirtualAlloc` finally allocates the needed meomory: 
 
-```
-VirtualAlloc(NULL, buffersize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES, PAGE_READWRITE)
+```cpp{numberLines: false}
+VirtualAlloc(NULL, buffersize, MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES, 
+    PAGE_READWRITE)
 ```
 
 Note that memory allocated will be commited as well, it is not possible to just reserve a [large-page allocation](https://docs.microsoft.com/en-us/windows/win32/memory/large-page-support). 
@@ -107,15 +110,31 @@ One last note, after such memory is allocated, it's not possible to see it in Ta
 
 ## Give me the numbers 
 
-I ran a simple experiment to see if large pages are really worth the time. I tried to simulate a memory-bound piece of code that accesses a large chunk of memory randomly. I then measured how many accesses can be done per second, when allocating the large chunk normally, vs as a large page.  
+I ran a simple experiment to see if large pages are really worth the time. I tried to simulate a memory-bound piece of code that accesses a large chunk of memory randomly.
 
-![Compare ](./comparison.gif)
+```cpp
+std::random_device rd;
+std::mt19937 indexRng(rd());
+std::uniform_int_distribution<std::uint64_t> indexDistribution(0, bufferSize - 1);
+while (true)
+{
+    const auto index = indexDistribution(indexRng);
+    largeBuffer[index] = 100;
+    ++numChanges;
+}
+```
+I then measured how many accesses can be done per second, when allocating the large chunk normally, vs as a large page:
+
+![LargePagesTest](./LargePages.gif)
+
 Left: Large-page enabled, right: disabled
 
-Large page memory access are far ahead! Not really a surprise, but it's nice to see in action. Code is hosted on [github [ADD LINK]]()
+Large page memory access are far ahead! Not really a surprise, but it's nice to see in action. Check [LargePageTest.cpp](https://github.com/aybassiouny/mahdytech/blob/master/content/blog/large-pages-how-when/Src/LargePageTest/LargePageTest/LargePageTest.cpp) for the source of this piece.
 
 ## Last notes
 
-Large Pages are especially important if you have a large chunk of memory to allocate, and access frequently. Its major downside: it's hard to allocate, and once allocated, it "sits" there in the physical memory, even if the process doing the allocating is idle, as large-page memory is non-pageable.
+Large Pages are especially important if you have a large chunk of memory to allocate, and access frequently. Its major downside: it's hard to allocate, and once allocated, it "sits" there in the physical memory, even if the process that did the allocation is idle, as large-page memory is non-pageable.
 
-In case someone is wondering about the service where large pages didn't give gains at the beginning of the blog, it , turns out that this chunk was *already* getting allocated as a large-page, and my hack on top to enable it was doing nothing. The thing about large-pages - they are not very visible.
+In case someone is wondering about the service where large pages didn't give gains at the beginning of the blog, it turns out that this chunk was *already* getting allocated as a large-page, and my hack on top to enable it was doing nothing. Unfortunately large-pages are not very visible, but at least I now know where to look:
+
+![Rammap](./Rammap.PNG)

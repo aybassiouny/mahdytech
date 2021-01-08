@@ -114,14 +114,14 @@ int main()
 {
     /*
     Get Sid from runnign powershell commands: 
-        $objUser = New-Object System.Security.Principal.NTAccount("AHMED")
+        $objUser = New-Object System.Security.Principal.NTAccount("aybas")
         $strSID = $objUser.Translate([System.Security.Principal.SecurityIdentifier])
         $strSID.Value
     There is probably a way through Win32 API, but that seems easier
     */
-    LPCSTR strSid = "S-1-5-21-1169947419-2731231734-878301561-1001";
+    LPCSTR strSid = "S-1-5-21-2554383953-2022197192-2242278139-1010";
     PSID sid;
-    WCHAR SystemName[] = L"DESKTOP-J3TTSAD";
+    WCHAR SystemName[] = L"DESKTOP-AVV4L7N";
 
     ConvertStringSidToSidA(strSid, &sid);
     AddPrivileges(sid, GetPolicyHandle(SystemName));
