@@ -54,7 +54,7 @@ BOOL SetPrivilege(
 }
 }
 
-void LargePageTest::SetLargePagePrivilege()
+bool LargePageTest::SetLargePagePrivilege()
 {
     HANDLE hToken;
     auto res = OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken);
@@ -68,4 +68,5 @@ void LargePageTest::SetLargePagePrivilege()
     {
         std::cout << "Failed to set privilege" << std::endl;
     }
+    return res;
 }

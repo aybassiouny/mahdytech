@@ -34,6 +34,7 @@ module.exports = {
             options: {
               maxWidth: 590,
               linkImagesToOriginal: true,
+              showCaptions: true,
             },
           },
           {
@@ -52,6 +53,7 @@ module.exports = {
             resolve: `gatsby-remark-prismjs`,
             options: {
               classPrefix: "language-",
+              showLineNumbers: true,
             },
           },
           `gatsby-remark-copy-linked-files`,

@@ -38,6 +38,9 @@ std::size_t Allocate(SIZE_T pageSize, DWORD allocationType, char** largeBuffer, 
     std::size_t buffersize = pageSize * N_PAGES_TO_ALLOC;
     std::cout << "Allocating " << buffersize << " bytes" << std::endl;
     *largeBuffer = reinterpret_cast<char*>(VirtualAlloc(NULL, buffersize, allocationType, PAGE_READWRITE));
+    /*for (auto i = 1u; i < buffersize; ++i)
+        *largeBuffer[i] = i ^ *largeBuffer[i - 1];*/
+
     if (!largeBuffer)
     {
         std::cout << "VirtualAlloc failed, error: " << GetErrorAsString(GetLastError());
@@ -65,7 +68,7 @@ void GenerateReport()
         auto timeDif = std::chrono::high_resolution_clock::now() - lastTime;
         auto curChanges = numChanges;
         auto thousandChangesPerSecond = (curChanges - lastChanges) / (1000.0f * std::chrono::duration_cast<std::chrono::milliseconds>(timeDif).count());
-        std::cout << "ThousandChangesPerSecond: " << thousandChangesPerSecond << std::endl;
+        std::cout << "Thousand Memory Reads Per Second: " << thousandChangesPerSecond << std::endl;
         lastTime = std::chrono::high_resolution_clock::now();
         lastChanges = curChanges;
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -105,7 +108,10 @@ int main(int argc, char* argv[])
         pageSize = GetLargePageMinimum();
         std::cout << "Large page minimum: " << pageSize << std::endl;
 
-        LargePageTest::SetLargePagePrivilege();
+        if (!LargePageTest::SetLargePagePrivilege())
+        {
+            return -1;
+        }
 
         std::cout << "Allocating using Large Pages, page size: " << pageSize << std::endl;
         allocationType = MEM_RESERVE | MEM_COMMIT | MEM_LARGE_PAGES;
