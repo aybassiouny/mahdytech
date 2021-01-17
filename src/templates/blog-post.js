@@ -43,23 +43,23 @@ class BlogPostTemplate extends React.Component {
         <hr />
 
         <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
-          <input name="path" type="hidden" value={post.frontmatter.title} />
+          <input name="path" type="hidden" value={post.fields.slug} />
           <input type="hidden" name="form-name" value="contact" />
           <p style={{
-              marginBottom: rhythm(0.5),
-            }}>Leave a comment:</p>
+            marginBottom: rhythm(0.5),
+          }}>Leave a comment:</p>
           <div>
             <TextField label="Name" name="Name" style={{
-          marginRight: rhythm(0.5),
-        }} />
-            <TextField label="Email" input="email" inputMode="email" name="Email" />
+              marginRight: rhythm(0.5),
+            }} />
+            <TextField label="Email (optional)" input="email" inputMode="email" name="Email" />
           </div>
           <div>
             <TextField label="Message" name="Message" fullWidth multiline />
           </div>
-          <div  style={{
-              marginTop: rhythm(1.0),
-            }}>
+          <div style={{
+            marginTop: rhythm(1.0),
+          }}>
             <Button variant="outlined" type="submit" color="primary">Send</Button>
           </div>
         </form>
@@ -111,6 +111,9 @@ export const pageQuery = graphql`
       id
       excerpt(pruneLength: 160)
       html
+      fields {
+        slug
+      }
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
