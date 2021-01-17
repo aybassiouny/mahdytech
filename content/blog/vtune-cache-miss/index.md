@@ -3,20 +3,21 @@ title: Profiling Processor Cache Misses with VTune
 date: "2019-08-06T12:00:32.169Z"
 description: VTune is an instruction level profiler. I want to explore if it can detect cache unfriendliness, and fix it.
 seotitle: Profiling Processor Cache Misses with VTune
-socialPic: column_major.PNG
+featuredImage: column_major.PNG
 ---
 
 I heard about [VTune](https://software.intel.com/en-us/vtune) a while ago as a processor instruction level profiler, but I never got the chance to play around with it. This blog - and maybe others in the future - will narrate my trials to get a hang of VTune.
 
-- [First things first: What is VTune](#First-things-first-What-is-VTune)
-  - [Getting VTune](#Getting-VTune)
-- [Let's Take VTune for a Ride: Cache Misses](#Lets-Take-VTune-for-a-Ride-Cache-Misses)
-  - [Row-Major and Column-Major 2D Array Traversal](#Row-Major-and-Column-Major-2D-Array-Traversal)
-  - [How Slow is This](#How-Slow-is-This)
-- [Profiling with VTune](#Profiling-with-VTune)
-  - [Column-Major Access](#Column-Major-Access)
-  - [Row-Major Access](#Row-Major-Access)
-- [Conclusion](#Conclusion)
+- [First things first: What is VTune](#first-things-first-what-is-vtune)
+  - [Getting VTune](#getting-vtune)
+- [Let's Take VTune for a Ride: Cache Misses](#lets-take-vtune-for-a-ride-cache-misses)
+  - [Row-Major and Column-Major 2D Array Traversal](#row-major-and-column-major-2d-array-traversal)
+  - [How Slow is This](#how-slow-is-this)
+- [Profiling with VTune](#profiling-with-vtune)
+  - [Column-Major Access](#column-major-access)
+  - [Row-Major Access](#row-major-access)
+  - [Detour: Trying a Naive Fix](#detour-trying-a-naive-fix)
+- [Conclusion](#conclusion)
 
 ## First things first: What is VTune
 

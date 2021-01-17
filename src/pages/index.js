@@ -5,6 +5,7 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm } from "../utils/typography"
+import Img from "gatsby-image"
 
 class BlogIndex extends React.Component {
   render() {
@@ -21,6 +22,7 @@ class BlogIndex extends React.Component {
         <Bio />
         {posts.map(({ node }) => {
           const title = node.frontmatter.title || node.fields.slug
+          const featuredImage = node.frontmatter.featuredImage? node.frontmatter.featuredImage.childImageSharp.fluid : null
           return (
             <div key={node.fields.slug}>
               <h3
@@ -32,12 +34,15 @@ class BlogIndex extends React.Component {
                   {title}
                 </Link>
               </h3>
-              <small>{node.frontmatter.date}</small>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: node.frontmatter.description || node.excerpt,
-                }}
-              />
+              <small>{node.frontmatter.date}</small>            
+              <Img sizes={featuredImage} />
+              <div>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: node.frontmatter.description || node.excerpt,
+                  }}
+                />
+              </div>
             </div>
           )
         })}
@@ -66,6 +71,13 @@ export const pageQuery = graphql`
             date(formatString: "MMMM DD, YYYY")
             title
             description
+            featuredImage {
+              childImageSharp {
+                fluid(maxWidth: 630) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
           }
         }
       }

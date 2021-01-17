@@ -2,6 +2,7 @@
 title: Spawning Your First C++ Fleet with Service Fabric and REST SDK
 date: "2019-02-04T12:00:32.169Z"
 description: Spawning a RESTful C++ app on an Azure fleet, using C++ REST SDK for building the web server and Service Fabric for orchestration.
+featuredImage: localSFDashboard.PNG
 ---
 
 I have mostly been working on the details of rather big projects, and that can make one lose touch with end-to-end magic. This week I decided to create a very simple distributed C++ web app, running on an Azure fleet. I settled on using Service Fabric as a distributed framework and CPPREST SDK for building the C++ web server. This is how it went!

@@ -2,6 +2,7 @@
 title: The Curious Case of the 99.9% Latency Hike
 date: "2019-01-13T12:00:32.169Z"
 description: Latency hike was caused by something local. However, `Lucy` had no new deployments for some time, no new data, nothing! How can nothing trigger something?
+featuredImage: Resolution.png
 ---
 
 > Disclaimer: This is a story from production. I have changed a couple of details, but the gist of the story holds.
