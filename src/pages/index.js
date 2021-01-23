@@ -60,7 +60,12 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMarkdownRemark(
+      filter: {
+        fileAbsolutePath: { regex: "/blog/.*/.*\\\\.md$/" }
+      }
+      sort: { fields: [frontmatter___date], order: DESC }) 
+    {
       edges {
         node {
           excerpt
