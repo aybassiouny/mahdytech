@@ -437,3 +437,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Merge conflicts leftovers
+*.orig
+
+# local 
+.env

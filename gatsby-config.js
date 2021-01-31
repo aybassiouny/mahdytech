@@ -25,6 +25,13 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/content/comments`,
+        name: `comments`,
+      },
+    },
+    {
       resolve: `gatsby-transformer-remark`,
       options: {
         gfm: true,
@@ -92,5 +99,6 @@ module.exports = {
     },
     `gatsby-plugin-sharp`, 
     `gatsby-transformer-sharp`,
+    `gatsby-plugin-material-ui`,
   ],
 }
