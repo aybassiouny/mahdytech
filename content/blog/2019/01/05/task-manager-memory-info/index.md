@@ -6,7 +6,7 @@ path: /2019/01/05/umdh-slow-leaks/
 featuredImage: ProcessExplorer.PNG
 ---
 
-As a windows user for many many years, Task Manager is a friend. Through the years, I have used it to kill thousands of misbehaving apps, and getting info about which ones are exhausting my resources. Until I started working with machines that has 100s of GBs of memory and apps to match. In this post I would like to discuss how it can be lacking as a memory tracker, and go over alternatives that could replace it. First, let's discuss how memory allocations work in Windows.
+As a windows user for many many years, Task Manager is a friend. Through the years, I have used it to kill thousands of misbehaving apps, and getting info about which ones are exhausting my resources. Until I started working with machines that have  100s of GBs of memory and apps to match. In this post I would like to discuss how it can be lacking as a memory tracker, and go over alternatives that could replace it. First, let's discuss how memory allocations work in Windows.
 
 - [Allocations in Windows](#allocations-in-windows)
   - [Reserving vs Committing memory](#reserving-vs-committing-memory)
@@ -19,7 +19,7 @@ tl;dr: Task Manager hides info about Process Paged Memory and its Virtual Space.
 
 ## Allocations in Windows
 
-Whenever a new process starts, OS gives it reserves some space for this process. In x86 systems, this space is 4GB, with usually 2GB for kernel use, and the rest for the process. For this post, let's ignore kernel usage. For x64-systems reserved process memory can grow to a whopping 64TB. How come can we allocate up to several TBs when we actually have a measly 8GB machine? We'd need first to understand reserving vs committing memory.  
+Whenever a new process starts, OS reserves some memory space for this process's use. In x86 systems, this space is 4GB, with usually 2GB for kernel use, and the rest for the process. For this post, let's ignore kernel usage. For x64-systems reserved process memory can grow to a whopping 64TB. How come can we allocate up to several TBs when we actually have a measly 8GB machine? We'd need first to understand reserving vs committing memory.  
 
 ### Reserving vs Committing memory
 
@@ -27,32 +27,32 @@ Not all parts of that huge address space are equal. Some parts of Process Addres
 
 ### OS Paging
 
-OS Paging is an amazing idea. Basically, the OS *realizes* some parts of the memory are not used a lot by your app. Now, why waste previous physical memory on that? A process in kernel makes this unused space is written to disk instead. Once it gets accessed again, it gets brought back into memory.
+OS Paging is an amazing idea. Basically, the OS *realizes* some parts of the memory are not used a lot by your app. Now, why waste precious physical memory on that? The kernel moves this unused space from RAM to disk. Once it gets accessed again, it gets brought back into RAM.
 
 For a more detailed explanation of how memory works in windows, I cannot recommend enough Mark Russinovich's [Mysteries of Memory Management Revealed](https://www.youtube.com/watch?v=TrFEgHr72Yg).  
 
 ## Memory Tracking
 
-Now that's a lot of info to track - with endless [scenarios](#Debugging-with-Memory-Info) to apply.  Whom to turn to? of course it's Task Manager!
+Now that's a lot of info to track - with endless [scenarios](#Debugging-with-Memory-Info) to apply.  Whom to turn to to understand process memory details? of course it's Task Manager!
 
 Memory that is backed by RAM is generally referred to as `Working Set`, while `Private Bytes`, in general, are the overall committed memory. Dlls make definitions a little more complicated, so let's ignore them for now. In other words:
 
 ```
-Private Bytes [Committed Memory] =  Private Bytes + Page File 
+Private Bytes [Committed Memory] =  Working Set (RAM-backed memory) + Page File (Disk-backed memory) 
 ```
 
 By default, Task Manager shows Working Set under any process:
 
 ![Default Task Manager](./TaskManagerWorkingSet.PNG "Task Manager shows Working Set by default")
 
-And that's the number I used to look at all the time. Little did I know, Task Manager *actually* has commit info, but it's under the column `Commit Size`. I so far could not find Virtual Memory info in there.
+And that's the number I used to look at all the time. Little did I know, Task Manager *actually* has commit info, but it's under the column `Commit Size`. So far, I could not find Virtual Memory info in Task Manager.
 
 ![Task Manager after adding Commit Size](./TaskManagerCommitSize.PNG "It is possible to add Commit Size")
 *Task Manager allows adding Commit Size by right-clicking columns and adding it*
 
 ## Effective Memory Metrics
 
-Thankfully, there are many other resources to examine Perf in Windows. Every windows machine has `PerfMon` that can be used to expose very detailed info about each process and the system in general:
+Thankfully, there are many other resources to examine process metrics in Windows. Every windows machine has `PerfMon` that can be used to expose very detailed info about each process and the system in general:
 
 ![PerfMon](./PerfMon.PNG "PerfMon allows examining very detailed measurements about system")
 
