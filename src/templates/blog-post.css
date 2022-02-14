@@ -2,6 +2,10 @@
     width: 100%;
 }
 
+.gatsby-resp-image-figcaption{
+  text-align: center;
+}
+
 .gatsby-highlight pre[class*="language-"].line-numbers {
     padding-left: 2.8em;
   }
