@@ -99,8 +99,7 @@ One more note is to make sure to set paths for system symbols. While VTune inter
 
 ![Adding Symbols](./symbols_1.PNG)
 
-![Adding Symbols](./symbols_2.PNG)
-<center>Adding Symbols to VTune</center>
+![Adding Symbols](./symbols_2.PNG "Adding Symbols to VTune")
 
 > One last note - VTune also supports profile using a portable executable, allowing for capture & analysis to happen on different machines.
 
