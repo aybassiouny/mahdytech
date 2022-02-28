@@ -70,12 +70,6 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId: "UA-131290932-3",
-      },
-    },
     `gatsby-plugin-feed`,
     {
       resolve: `gatsby-plugin-manifest`,
@@ -100,5 +94,18 @@ module.exports = {
     `gatsby-plugin-sharp`, 
     `gatsby-transformer-sharp`,
     `gatsby-plugin-material-ui`,
+    {
+      resolve: `gatsby-plugin-posthog`,
+      options: {
+        // Specify the API key for your PostHog Project (required)
+        apiKey: "phc_taUaJ7ZAE5ekNc9W4uJ7EdjIiU4sVk7lOKOG9syi4g3",
+        // Specify the app host if self-hosting (optional, default: https://app.posthog.com)
+        apiHost: "https://app.posthog.com",
+        // Puts tracking script in the head instead of the body (optional, default: true)
+        head: true,
+        // Enable posthog analytics tracking during development (optional, default: false)
+        isEnabledDevMode: true
+      },
+    }
   ],
 }

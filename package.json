@@ -18,6 +18,7 @@
     "gatsby-plugin-manifest": "^2.9.1",
     "gatsby-plugin-material-ui": "^2.1.10",
     "gatsby-plugin-offline": "^2.2.10",
+    "gatsby-plugin-posthog": "^1.0.1",
     "gatsby-plugin-react-helmet": "^3.7.0",
     "gatsby-plugin-sharp": "^2.0.37",
     "gatsby-plugin-sitemap": "^2.9.0",
