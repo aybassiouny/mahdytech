@@ -35,7 +35,7 @@ class BlogIndex extends React.Component {
                 </Link>
               </h3>
               <small>{node.frontmatter.date}</small>            
-              <Img sizes={featuredImage} />
+              {featuredImage && <Img sizes={featuredImage} />}
               <div>
                 <p
                   dangerouslySetInnerHTML={{
