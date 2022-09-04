@@ -6,7 +6,7 @@ seotitle: When Lower Load Triggers Higher Latencies
 featuredImage: fishing.png
 ---
 
-While my team was moving a service, lets call it Billy, to a new cluster with differential hardware, Billy's performance degraded. Now my team knows I am into this kind of thing, so they asked me to take a look. I thought it'd be a matter of increasing the number of threads or something similarly straightforward, and said "consider it done". In hindsight, way too much confidence 😅.
+While my team was moving a service, let's call it Billy, to a new cluster with different hardware, Billy's performance degraded. Now my team knows I am into this kind of thing, so they asked me to take a look. I thought it'd be a matter of accommodating the number of threads to the new hardware, or something similarly straightforward, and said "consider it done". In hindsight, way too much confidence 😅.
 
 - [**First things first**](#first-things-first)
 - [**Digging Deeper**](#digging-deeper)
@@ -16,17 +16,19 @@ While my team was moving a service, lets call it Billy, to a new cluster with di
 
 ## **First things first**
 
-My first move is to get a concrete idea of what kind of "perf issues" we have here. With some luck, I can get easily ready monitoring graphs for Billy, and my go-to graph is availability:
+My first move is to get a concrete idea of what kind of "perf issues" we have here. With some luck, I can find my way to Billy's monitoring graphs. My go-to graph is availability, which visualizes the equation:
 
-We have availability SLAs for all services, if availability is below that SLA, we have got a problem. Billy had low availability (than our SLA), so we've got a real problem here. There are many reasons for an availability drop – as many as the reasons a query can fail. Good client monitoring is essential to triage why we have a low availability; it could be for example a client issue, or a server issue, and if it is a server issue could be due to latency or maybe server is too busy handling other requests. In Billy's case, it was high server latency.
+![equation](equation.png)
 
-![Billy's Latency](BillyLatency.png) 
+There are availability SLAs for all services, if availability dips below that SLA, we have got a problem. Billy had low availability (than SLA), so we've got a real problem here. There are many reasons for an availability drop – as many as the reasons a query can fail. Good client monitoring is essential to triage why we have a low availability; it could be for example a client issue, or a server issue, and if it is a server issue could be due to latency or maybe server is too busy handling other requests. In Billy's case, it was high server latency.
+
+![Billy's Latency](BillyLatency.png)
 
 I started by preparing a simple change that updated some configs (e.g. number of threads used, maximum number of requests processed at a time, etc) and hoped that would do the trick – it didn't. Latency and availability stayed about the same.
 
 ## **Digging Deeper**
 
-In my experience, a latency regression is a sign of some introduced resource contention, 90% of the time it is heap contention during allocating or freeing memory. On Windows, this contention shows up clearly on an ETW capture. I used to use [XPerf]() for taking ETW captures, but now I find [WPR]() more convenient, I usually suffice with the CPU events using the command:
+In my experience, a latency regression is a sign of some introduced resource contention, 90% of the time it is heap contention during allocating or freeing memory. On Windows, this contention shows up clearly on an ETW capture. I used to use [XPerf](https://mahdytech.com/2019/01/13/curious-case-999-latency-hike/) for taking ETW captures, but now I find [WPR](https://docs.microsoft.com/en-us/windows-hardware/test/wpt/wpr-how-to-topics) more convenient, I usually suffice with the CPU events using the command:
 
 ```
 Wpr -start cpu.verbose
