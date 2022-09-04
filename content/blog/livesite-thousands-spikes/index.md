@@ -2,7 +2,7 @@
 title: "Livesite by a thousand spikes 📈"
 date: "2022-08-30T12:00:32.169Z"
 description: An infrequent issue on many machines can disguise as a cluster-wide issue.
-seotitle: When Lower Load Triggers Higher Latencies
+seotitle: Livesite spikes ETW WPR Windows Performance Monitoring
 featuredImage: fishing.png
 ---
 
