@@ -1,5 +1,5 @@
 ---
-title: "Livesite by a thousand spikes 📈"
+title: "Livesite by a Thousand Spikes 📈"
 date: "2022-08-30T12:00:32.169Z"
 description: An infrequent issue on many machines can disguise as a cluster-wide issue.
 seotitle: Livesite spikes ETW WPR Windows Performance Monitoring
@@ -129,4 +129,4 @@ With a little digging, it turned out some library we're consuming decides on rar
 
 Definitely one of my more interesting debugging stories :)
 
-Please feel free to drop a comment on [hackernews]() or reach out on [Twitter](https://twitter.com/aybassiouny).
+Please feel free to drop a comment on [hackernews](https://news.ycombinator.com/item?id=32718824) or reach out on [Twitter](https://twitter.com/aybassiouny).
