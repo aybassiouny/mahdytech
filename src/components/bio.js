@@ -38,10 +38,10 @@ function Bio() {
               }}
             />
             <p>
-              This is <strong>{author}</strong>, and these are some of my thoughts on Cloud Computing.
+              This is <strong>{author}</strong>, and these are some of my thoughts, mostly on optimizing performance.
               {` `}
               <a href={`https://twitter.com/${social.twitter}`}>
-                Follow me on Twitter
+                Contact me on Twitter
               </a>
             </p>
           </div>

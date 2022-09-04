@@ -25,13 +25,6 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/content/comments`,
-        name: `comments`,
-      },
-    },
-    {
       resolve: `gatsby-transformer-remark`,
       options: {
         gfm: true,
@@ -60,7 +53,7 @@ module.exports = {
             resolve: `gatsby-remark-prismjs`,
             options: {
               classPrefix: "language-",
-              showLineNumbers: true,
+              showLineNumbers: false,
             },
           },
           `gatsby-remark-copy-linked-files`,
@@ -93,7 +86,6 @@ module.exports = {
     },
     `gatsby-plugin-sharp`, 
     `gatsby-transformer-sharp`,
-    `gatsby-plugin-material-ui`,
     {
       resolve: `gatsby-plugin-posthog`,
       options: {
@@ -106,6 +98,6 @@ module.exports = {
         // Enable posthog analytics tracking during development (optional, default: false)
         isEnabledDevMode: true
       },
-    }
+    },
   ],
 }

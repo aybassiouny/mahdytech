@@ -35,7 +35,7 @@ class BlogIndex extends React.Component {
                 </Link>
               </h3>
               <small>{node.frontmatter.date}</small>            
-              <Img sizes={featuredImage} />
+              {featuredImage && <Img sizes={featuredImage} />}
               <div>
                 <p
                   dangerouslySetInnerHTML={{
@@ -78,7 +78,7 @@ export const pageQuery = graphql`
             description
             featuredImage {
               childImageSharp {
-                fluid(maxWidth: 630) {
+                fluid(maxWidth: 800) {
                   ...GatsbyImageSharpFluid
                 }
               }

@@ -63,12 +63,5 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       node,
       value,
     });
-
-    const collection = getNode(node.parent).sourceInstanceName;
-    createNodeField({
-      name: `collection`,
-      node,
-      value: collection,
-    });
   }
 }
