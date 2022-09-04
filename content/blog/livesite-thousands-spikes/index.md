@@ -19,7 +19,6 @@ While my team was moving a service, let's call it Billy, to a new cluster with d
 My first move is to get a concrete idea of what kind of "perf issues" we have here. With some luck, I can find my way to Billy's monitoring graphs. My go-to graph is availability, which visualizes the equation:
 
 ![equation](equation.png)
-<center>Source: <a href=https://craftofcoding.wordpress.com/2017/02/03/column-major-vs-row-major-arrays-does-it-matter/>craftofcoding</a></center>
 
 There are availability [SLAs](https://en.wikipedia.org/wiki/Service-level_agreement) for all services, if availability dips below that SLA, we have got a problem. Billy's availability graph was lower than the SLA, so we've got a real problem here. There are many reasons for an availability drop – as many as the reasons a query can fail. Good client monitoring is essential to triage why we have a low availability; it could be for example a client issue or a server issue, and if it is a server issue could be due to latency or maybe the server is too busy handling other requests. In Billy's case, it was high server latency:
 
@@ -129,3 +128,5 @@ I zoomed out, and here it was! All the requests with 1 second wait coincide with
 With a little digging, it turned out some library we're consuming decides on rare occasions to sleep for 1 second, and for some reason, this happens more often on the new machines.
 
 Definitely one of my more interesting debugging stories :)
+
+Please feel free to drop a comment on [hackernews]() or reach out on [Twitter](https://twitter.com/aybassiouny).
