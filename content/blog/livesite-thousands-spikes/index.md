@@ -3,7 +3,7 @@ title: "Livesite by a thousand spikes 📈"
 date: "2022-08-30T12:00:32.169Z"
 description: An infrequent issue on many machines can disguise as a cluster-wide issue.
 seotitle: When Lower Load Triggers Higher Latencies
-featuredImage: .\fishing.png
+featuredImage: fishing.png
 ---
 
 While my team was moving a service, lets call it Billy, to a new cluster with differential hardware, Billy's performance degraded. Now my team knows I am into this kind of thing, so they asked me to take a look. I thought it'd be a matter of increasing the number of threads or something similarly straightforward, and said "consider it done". In hindsight, way too much confidence 😅.

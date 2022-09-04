@@ -3,7 +3,7 @@ title: "Large-Pages in Windows: The What, the Why & the How"
 date: "2020-12-27T12:00:32.169Z"
 description: It hit me that I don’t know what Large Pages really are, and I needed deeper info - which I am going through in this post.
 seotitle: Large Pages memory accesses Page Table lookups Translation Looksaside Buffer
-featuredImage: .\TLB.PNG
+featuredImage: TLB.PNG
 ---
 
 I stumbled across the concept of "Large-Pages" several times, mainly through mentions in our codebase, but I never went much further than exploring the Wikipedia page. I knew they can make memory lookups faster, but that's about it. 
