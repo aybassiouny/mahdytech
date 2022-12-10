@@ -1,0 +1,87 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1527 485">
+  <rect fill="#ffffff" stroke="none" x="0" y="0" width="1527" height="485" data-bg=""/>
+  <g transform="translate(30, 30)">
+    <defs/>
+    <g>
+      <g transform="translate(310.66874192655087,85.19531249999999) scale(2.25,2.25)">
+        <path fill="none" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 307.97915917634964 32.81333550733505 L 432.33042732351964 3.4244277548953477" stroke-opacity="1" stroke-linejoin="round" stroke-miterlimit="10"/>
+        <path fill="rgb(0,0,0)" stroke="none" paint-order="stroke fill markers" d=" M 426.8105599595377 9.198816405137709 L 434.2768077965377 2.9644244350660784 L 424.8095455182804 0.7320613475090996 Z" fill-opacity="1"/>
+        <g transform="translate(370.64138836818915,18.00388080115788) rotate(-13.297169473306404,0,0)">
+          <rect fill="rgb(255,255,255)" stroke="none" x="-47.5" y="-8" width="95" height="16" fill-opacity="1"/>
+          <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="0" y="5" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Local Environment</text>
+          <g transform="rotate(13.297169473306404,0,0) translate(-370.64138836818915,-18.00388080115788)">
+            <path fill="none" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M -70.42500251531601 87.82226544656412 L 31.46348288888629 98.01167171652236" stroke-opacity="1" stroke-linejoin="round" stroke-miterlimit="10"/>
+            <path fill="rgb(0,0,0)" stroke="none" paint-order="stroke fill markers" d=" M 24.363872691250126 101.67337009864241 L 33.45355619071225 98.21068994020935 L 25.229601964288523 93.0165512356995 Z" fill-opacity="1"/>
+            <g transform="translate(-18.98324148775837,92.966723137465) rotate(5.710903664639132,0,0)">
+              <rect fill="rgb(255,255,255)" stroke="none" x="-11" y="-8" width="22" height="16" fill-opacity="1"/>
+              <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="0" y="5" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Yes</text>
+              <g transform="rotate(-5.710903664639132,0,0) translate(18.98324148775837,-92.966723137465)">
+                <path fill="none" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 113.8652645945549 105.57087504570964 L 442.726907383162 132.8153181282973" stroke-opacity="1" stroke-linejoin="round" stroke-miterlimit="10"/>
+                <path fill="rgb(0,0,0)" stroke="none" paint-order="stroke fill markers" d=" M 435.6906374818711 136.597302511685 L 444.72007926661377 132.98044184863164 L 436.40892566532546 127.92700481866952 Z" fill-opacity="1"/>
+                <g transform="translate(278.79437895972137,119.23437751708705) rotate(4.735836838305742,0,0)">
+                  <rect fill="rgb(255,255,255)" stroke="none" x="-31.5" y="-8" width="63" height="16" fill-opacity="1"/>
+                  <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="0" y="5" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Crash Dump</text>
+                  <g transform="rotate(-4.735836838305742,0,0) translate(-278.79437895972137,-119.23437751708705)">
+                    <path fill="none" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M -70.42500251531598 65.18349994150958 L 20.453494816504218 12.535097580461454" stroke-opacity="1" stroke-linejoin="round" stroke-miterlimit="10"/>
+                    <path fill="rgb(0,0,0)" stroke="none" paint-order="stroke fill markers" d=" M 16.836673224067802 19.657674471481002 L 22.184062155043193 11.532532526820475 L 12.475515240729537 12.129706548836477 Z" fill-opacity="1"/>
+                    <g transform="translate(-24.553112014771138,38.60865749757528) rotate(-30.08488762824441,0,0)">
+                      <rect fill="rgb(255,255,255)" stroke="none" x="-9.5" y="-8" width="19" height="16" fill-opacity="1"/>
+                      <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="0" y="5" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">No</text>
+                      <g transform="rotate(30.08488762824441,0,0) translate(24.553112014771138,-38.60865749757528)">
+                        <path fill="none" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 113.86526459455493 89.99048035082032 L 225.69663167291972 55.37574412542989" stroke-opacity="1" stroke-linejoin="round" stroke-miterlimit="10"/>
+                        <path fill="rgb(0,0,0)" stroke="none" paint-order="stroke fill markers" d=" M 220.58245371571147 61.512329806572545 L 227.60720217325323 54.7843725305292 L 218.0099872778935 53.2013481301218 Z" fill-opacity="1"/>
+                        <g transform="translate(170.2585907588207,72.53526933939993) rotate(-17.1986653365591,0,0)">
+                          <rect fill="rgb(255,255,255)" stroke="none" x="-40.5" y="-8" width="81" height="16" fill-opacity="1"/>
+                          <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="0" y="5" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Live Debugging</text>
+                          <g transform="rotate(17.1986653365591,0,0) translate(-170.2585907588207,-72.53526933939993)">
+                            <path fill="none" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 307.97915917634964 68.89884970595776 Q 368.58744009537827 109.65345675351597 442.8026316144425 127.81298397086715" stroke-opacity="1" stroke-linejoin="round" stroke-miterlimit="10"/>
+                            <path fill="rgb(0,0,0)" stroke="none" paint-order="stroke fill markers" d=" M 435.23016943403593 130.30684915464215 L 444.74532067704064 128.28833563654385 L 437.4214191167592 121.88732275299904 Z" fill-opacity="1"/>
+                            <g transform="translate(371.98916774538714,104.00468679596422) rotate(23.472466089559372,0,0)">
+                              <rect fill="rgb(255,255,255)" stroke="none" x="-54" y="-8" width="108" height="16" fill-opacity="1"/>
+                              <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="0" y="5" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Advanced Debugging</text>
+                              <g transform="rotate(-23.472466089559372,0,0) translate(-371.98916774538714,-104.00468679596422)">
+                                <path fill="none" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 307.97915917634964 52.7426398661066 Q 385.10838428931106 73.22464394084034 450.6166744499334 119.1629540003151" stroke-opacity="1" stroke-linejoin="round" stroke-miterlimit="10"/>
+                                <path fill="rgb(0,0,0)" stroke="none" paint-order="stroke fill markers" d=" M 442.6126566602024 119.02528272759456 L 452.2541687909618 120.31126244454947 L 447.49804528607007 111.82646490976902 Z" fill-opacity="1"/>
+                                <g transform="translate(382.20315055122626,79.58872043702559) rotate(25.095202597399773,0,0)">
+                                  <rect fill="rgb(255,255,255)" stroke="none" x="-18" y="-8" width="36" height="16" fill-opacity="1"/>
+                                  <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="0" y="5" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Server</text>
+                                  <g transform="rotate(-25.095202597399773,0,0) translate(-382.20315055122626,-79.58872043702559)">
+                                    <path fill="rgb(255,255,255)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M -136.57499641180038 54.489583333333364 L -136.57499641180038 114.48958333333334 L -70.92500251531602 114.48958333333336 L -70.92500251531601 54.48958333333337 Z" fill-opacity="1" stroke-opacity="1" stroke-miterlimit="10"/>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="-103.7499994635582" y="76.98958333333336" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Do you </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="-103.7499994635582" y="89.48958333333336" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">have </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="-103.7499994635582" y="101.98958333333336" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">symbols? </text>
+                                    <path fill="rgb(255,255,255)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 435.7499980330467 -36.36458333333332 L 435.7499980330467 23.63541666666666 L 511.7499980330467 23.63541666666667 L 511.7499980330467 -36.364583333333314 Z" fill-opacity="1" stroke-opacity="1" stroke-miterlimit="10"/>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="473.7499980330467" y="-13.864583333333329" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Use Visual </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="473.7499980330467" y="-1.3645833333333286" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Studio </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="473.7499980330467" y="11.135416666666671" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Debugger </text>
+                                    <path fill="rgb(255,255,255)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 446.2166652083397 121.38541666666666 L 446.2166652083397 149.38541666666666 L 501.28333085775375 149.38541666666666 L 501.28333085775375 121.38541666666666 Z" fill-opacity="1" stroke-opacity="1" stroke-miterlimit="10"/>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="473.7499980330467" y="140.38541666666666" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Windbg</text>
+                                    <path fill="rgb(255,255,255)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 34.94859284162523 72.28125 L 34.948592841625214 132.28125 L 113.36526459455489 132.28125 L 113.3652645945549 72.28125000000001 Z" fill-opacity="1" stroke-opacity="1" stroke-miterlimit="10"/>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="74.15692871809006" y="101.03125" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">What are you </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="74.15692871809006" y="113.53125" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">debugging? </text>
+                                    <path fill="rgb(255,255,255)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 17.420821845531478 -33.46875 L 17.420821845531464 10.531249999999993 L 106.35415619611737 10.53125 L 106.3541561961174 -33.468749999999986 Z" fill-opacity="1" stroke-opacity="1" stroke-miterlimit="10"/>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="61.88748902082443" y="-12.71875" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Use a </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="61.88748902082443" y="-0.21875" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Disassembler </text>
+                                    <path fill="rgb(255,255,255)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 229.06248742341995 12.197917083899185 L 229.06248742341995 72.19791708389917 L 307.47915917634964 72.19791708389917 L 307.47915917634964 12.197917083899192 Z" fill-opacity="1" stroke-opacity="1" stroke-miterlimit="10"/>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="268.2708232998848" y="34.69791708389918" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">Where are </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="268.2708232998848" y="47.19791708389918" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">you </text>
+                                    <text fill="rgb(0,0,0)" stroke="none" font-family="Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol" font-size="10px" font-style="normal" font-weight="normal" text-decoration="normal" x="268.2708232998848" y="59.69791708389918" text-anchor="middle" dominant-baseline="text-after-edge" fill-opacity="1">debugging? </text>
+                                    <g transform="scale(0.4444444444444444,0.4444444444444444) translate(-310.66874192655087,-85.19531249999999)"/>
+                                  </g>
+                                </g>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+~~~
+theme: original
+layout:
+  name: klay
+  spacingFactor: 1.75
+~~~
+Do you have symbols? 
+  No: Use a Disassembler
+  Yes: What are you debugging? 
+    Crash Dump: Windbg 
+    Live Debugging: Where are you debugging?
+      Local Environment: Use Visual Studio Debugger
+      Server: (Windbg)
+      Advanced Debugging: (Windbg)
