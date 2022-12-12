@@ -20,40 +20,55 @@ There will be situations, however, where you need to debug an application on rem
 
 ![flowchart](flowchart.svg "flowchart")
 
-How to install? 
+## How to install? 
 If at all possible I’d recommend using Windbgx (aka windbg next) (link), but sometimes we’re restricted to what we have on the servers. Windbg classic is not too bad either. 
 
-My Top 10 commands! 
+## My Top 10 commands! 
 For those who’re used to Visual Studio debugging, using Windbg for the first time can be daunting (it def was for me!). Instead of the nice GUI, we need to know the commands we need for a successful debugging session. Here are my top commands for getting started: 
 
--	Attaching to a process
+### 1. Attaching to a process
 Not a command actually, but a startup parameter. If I am not deugging a crash dump, I attach to a process by running 
 Windbg -pn <process_name_with_extension> 
 
--	Go (live debugging only) 
+![pn](windbg_pn.PNG "pn")
+(update me)
+
+### 2. Go (live debugging only) 
 Once attached to a process, the process is usually completely stopped. In order to keep it going, you can use the command “go” or just “g” to tell the execution to continue
 
--	Display callstack
+![go](windbg_g.PNG "go")
+Using `go` (or just `g`) command will resume exeuction of the program. 
+
+### 3. `.sympath+`: Update Symbol Path
+In order to add another path where pdbs or a symbol server. It is almost always a good idea to add Microsoft’s public symbol server on the path if it is not already there. 
+
+![sympath](windbg_sympath.PNG "sympath")
+`sympath` alone will show the current symbol path. `sympath+` will append to the current path
+
+### 4. `k`: Display callstack
 My first command when doing crash dump debugging: where are we now? What is the program trying to execute? 
 > k
 Keep an eye on the thread id in the bottom left. Sometimes breakpoints will stop in different places and this thread id is your only way to know which one you’re currently on. 
 
--	dv
+### 5. `dv`: Display Local Variables
 display local variables. My first step after getting callstack is getting local variables for this frame. Pro tip: some variables will be optimized out in release builds, but if you go up or down a fram (by clicking each fram’s link) you can access them. Otherwise you will have to do some assembly ninja to infer their values from the registers
--	!uniqstack
-Gives callstack across all threads, unlike “~* K”, it distills them to only the unique stacks. Very helpful in situations where there’s a deadlock or something and I want to quickly check for weird callstacks.  
--	.excr
-If execution stops because of a thrown exception, this will give you exception details (_sometimes_ helpful) 
--	X module.dll!*substring_of_func_name*
-If I know the function I want to break on, and especially if I don’t have the source file, I will first use this command to find its location in the binary, then use the next command to set a break point. You can also you use this command to find value of static variables! 
--	Bp <function>, bp <location>, bp <condition> 
-My go to way of setting up break points is to try to find the source file, open it in Windbg, then use f9 to set break points in it. But this does not always work. Alternatively, I might want to setup conditional break points, in which case I use X to get location, then bp command to set my break points. Very useful! 
--	Sxe eh (live debugging only) 
-This command is not very well known but it’s one of my favorites. Windbg by default does not break when an excpetion is thrown. A lot of the times, I am trying to exactly do that – break whenever an exception happens
--	.sympath+
-In order to add another path where pdbs or a symbol server. It is almost always a good idea to add Microsoft’s public symbol server on the path if it is not already there. 
 
--	!analyze -v [crash dump only] 
+#### 6. `!uniqstack`: Display Unique Stack
+Gives callstack across all threads, unlike “~* K”, it distills them to only the unique stacks. Very helpful in situations where there’s a deadlock or something and I want to quickly check for weird callstacks.  
+
+#### 7. `.excr`: Exception Info
+If execution stops because of a thrown exception, this will give you exception details (_sometimes_ helpful) 
+
+### 8. `X module.dll!*substring_of_func_name*`: Find Symbol
+If I know the function I want to break on, and especially if I don’t have the source file, I will first use this command to find its location in the binary, then use the next command to set a break point. You can also you use this command to find value of static variables! 
+
+### 9. `Bp <function>, bp <location>, bp <condition>` Create a Breakpoint
+My go to way of setting up break points is to try to find the source file, open it in Windbg, then use f9 to set break points in it. But this does not always work. Alternatively, I might want to setup conditional break points, in which case I use X to get location, then bp command to set my break points. Very useful! 
+
+### 10. `Sxe eh`: Break on C++ Exceptionc (live debugging only) 
+This command is not very well known but it’s one of my favorites. Windbg by default does not break when an excpetion is thrown. A lot of the times, I am trying to exactly do that – break whenever an exception happens
+
+#### Bonus: !analyze -v [crash dump only] 
 Not actually one of my common commands, but I know some people who swear by it, so I will include it for completeness (and also to make the list a full 10). 
 It analyzes the crash dump and prints a nice report, the most important part IMO is where it says where the crash happened and why (e.g. access violation) 
 
